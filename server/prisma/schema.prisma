@@ -28,14 +28,14 @@ model Vendor {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String
   price       Float
   image       String?
   vendorId    Int
-  vendor      Vendor  @relation(fields: [vendorId], references: [id])
-  orders      Order[]
+  vendor      Vendor      @relation(fields: [vendorId], references: [id])
+  OrderItem   OrderItem[]
 }
 
 enum ORDER_STATE {
@@ -46,15 +46,23 @@ enum ORDER_STATE {
   COMPLETED
 }
 
-model Order {
-  id        Int         @id @default(autoincrement())
-  ProductId Int
-  Products  Product[]
-  userId    Int
-  user      User        @relation(fields: [userId], references: [id])
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   total     Float
-  state     ORDER_STATE
+  Order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  user       User        @relation(fields: [userId], references: [id])
+  total      Float
+  state      ORDER_STATE
+  OrderItems OrderItem[]
 }
 
 model RefreshToken {

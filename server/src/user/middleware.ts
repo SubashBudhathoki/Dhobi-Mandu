@@ -4,7 +4,8 @@ import TokenService from "../token/service";
 export default {
   isLoggedIn: function (req: Request, res: Response, next: NextFunction) {
     const accessToken = req.cookies["X-ACCESS-TOKEN-USER"];
-
+    console.log(accessToken);
+    console.log("HERE");
     if (!accessToken) {
       return res.status(401).json({
         success: false,
