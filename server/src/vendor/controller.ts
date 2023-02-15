@@ -13,7 +13,7 @@ export default {
       );
 
       const accessToken = TokenService.createToken(
-        vendor,
+        vendor.id,
         "7d",
         process.env.JWT_SECRET!
       );

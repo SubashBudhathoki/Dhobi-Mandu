@@ -10,7 +10,7 @@ export default {
       const user = await UserService.getByEmailPwd(data.email, data.password);
 
       const accessToken = TokenService.createToken(
-        user,
+        user.id,
         "7d",
         process.env.JWT_SECRET!
       );
