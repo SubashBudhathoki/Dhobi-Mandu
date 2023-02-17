@@ -1,14 +1,15 @@
 import {
   createStyles,
-  Avatar,
   Text,
   Group,
   Paper,
   Badge,
   Flex,
   Button,
+  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
-import { PhoneCall, At, Trash } from "tabler-icons-react";
+import { Plus, Minus, Trash } from "tabler-icons-react";
 import { useCart } from "../../context/cartContext";
 import { TCartItem } from "../../utils/types";
 
@@ -56,7 +57,47 @@ export default function CartItem({ cartItem }: { cartItem: TCartItem }) {
 
             <Group noWrap spacing={10} mt={3}>
               <Text size="md" color="dimmed">
-                x {cartItem.quantity}
+                <Flex align="center" gap="sm">
+                  <Text size="lg">x {cartItem.quantity}</Text>
+                  <Flex align="center" gap="xs">
+                    <Tooltip label="Increase Quantity">
+                      <ActionIcon
+                        onClick={() =>
+                          dispatch({
+                            type: "changeQty",
+                            payload: {
+                              itemId: cartItem.service.id,
+                              type: "INC",
+                            },
+                          })
+                        }
+                        size="sm"
+                        variant="outline"
+                        color="blue"
+                      >
+                        <Plus />
+                      </ActionIcon>
+                    </Tooltip>
+                    <Tooltip label="Decrease Quantity">
+                      <ActionIcon
+                        onClick={() =>
+                          dispatch({
+                            type: "changeQty",
+                            payload: {
+                              itemId: cartItem.service.id,
+                              type: "DEC",
+                            },
+                          })
+                        }
+                        size="sm"
+                        variant="outline"
+                        color="blue"
+                      >
+                        <Minus />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Flex>
+                </Flex>
               </Text>
             </Group>
 

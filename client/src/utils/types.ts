@@ -20,3 +20,32 @@ export type TCartItem = {
 };
 
 export type TCart = TCartItem[];
+
+export type TORDER_STATE =
+  | "RECEIVED"
+  | "WASHING"
+  | "SHIPPING"
+  | "CANCELLED"
+  | "COMPLETED";
+
+export type TOrderRequest = Array<{
+  serviceId: number;
+  quantity: number;
+}>;
+
+export type TOrderResponse = Array<{
+  id: number;
+  userId: number;
+  total: number;
+  state: TORDER_STATE;
+  OrderItems: Array<{
+    id: number;
+    serviceId: number;
+    quantity: number;
+    total: number;
+    orderId: number;
+    Service: TSingleService & {
+      vendorId: number;
+    };
+  }>;
+}>;

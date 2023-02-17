@@ -69,6 +69,7 @@ export default {
     try {
       const userId = req.userId;
       const user = await UserService.getById(userId);
+      console.log("userId", userId);
       if (!user)
         return res.status(404).json({
           message: "User not found",

@@ -11,7 +11,7 @@ export default function home() {
       <HeroArea />
       <ContactInfoComponent />
       <AboutComponent />
-      <ServicesComponent />
+      <ServicesComponent dataLength={3} />
       <WorkingProcessComponent />
       <FeaturesComponent />
     </>

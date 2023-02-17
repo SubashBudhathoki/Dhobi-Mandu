@@ -1,5 +1,5 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { OrderItem, ORDER_STATE, Product } from "@prisma/client";
+import { OrderItem, ORDER_STATE, Service } from "@prisma/client";
 import { Order, ValidateOrderState } from "./validation";
 import { prisma } from "../index";
 import ValidateOrderItems from "./validation";
@@ -10,7 +10,7 @@ export default {
       include: {
         OrderItems: {
           include: {
-            product: true,
+            Service: true,
           },
         },
       },
@@ -24,7 +24,7 @@ export default {
       include: {
         OrderItems: {
           include: {
-            product: true,
+            Service: true,
           },
         },
       },
@@ -42,7 +42,7 @@ export default {
       include: {
         OrderItems: {
           include: {
-            product: true,
+            Service: true,
           },
         },
       },
@@ -57,7 +57,7 @@ export default {
       include: {
         OrderItems: {
           include: {
-            product: true,
+            Service: true,
           },
         },
       },
@@ -67,16 +67,16 @@ export default {
     // Throws error if order is invalid
     // await ValidateOrderItems(orderItems);
 
-    // for each order item, get the product and calculate the total
+    // for each order item, get the Service and calculate the total
     let orderTotal = 0;
     for (let orderIdx in orderItems) {
       const order = orderItems[orderIdx];
-      const product = (await prisma.product.findUnique({
+      const Service = (await prisma.Service.findUnique({
         where: {
-          id: order.productId,
+          id: order.serviceId,
         },
-      })) as Product;
-      const total = product.price * order.quantity;
+      })) as Service;
+      const total = Service.price * order.quantity;
       orderItems[orderIdx].total = total;
       orderTotal += total;
     }
@@ -95,7 +95,7 @@ export default {
         OrderItems: {
           create: order.OrderItems.map((item) => {
             return {
-              productId: item.productId,
+              serviceId: item.serviceId,
               quantity: item.quantity,
               total: item.total,
             };
@@ -106,7 +106,7 @@ export default {
       include: {
         OrderItems: {
           include: {
-            product: true,
+            Service: true,
           },
         },
       },

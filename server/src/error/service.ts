@@ -26,8 +26,6 @@ function isPrismaError(error: any) {
 
 export default {
   handleError: function (error: any) {
-    console.log("ERROR", error);
-
     if (isPrismaError(error)) return this.handlePrismaError(error);
     else if (error instanceof ZodError) return this.handleZodError(error);
 
@@ -40,6 +38,7 @@ export default {
   },
 
   handlePrismaError: function (error: PrismaError) {
+    console.log(error.message);
     return {
       success: false,
       data: error,

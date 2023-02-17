@@ -1,4 +1,10 @@
-import { TAllService, TSingleService, TUser } from "./../utils/types";
+import {
+  TAllService,
+  TOrderRequest,
+  TOrderResponse,
+  TSingleService,
+  TUser,
+} from "./../utils/types";
 // use tanstack-query
 const BASE_URL = import.meta.env.VITE_SERVER_URI || "http://localhost:3000";
 import axios from "axios";
@@ -73,17 +79,33 @@ export async function UserLogout(): Promise<TReturnData<{}>> {
   return response.data;
 }
 
-export async function ProductGet(): Promise<TReturnData<TAllService>> {
-  const response = await axiosInstance.get(`${BASE_URL}/product`, {
+export async function ServiceGet(): Promise<TReturnData<TAllService>> {
+  const response = await axiosInstance.get(`${BASE_URL}/service`, {
     withCredentials: true,
   });
   return response.data;
 }
 
-export async function ProductGetById(
+export async function ServiceGetById(
   id: string
 ): Promise<TReturnData<TSingleService>> {
-  const response = await axiosInstance.get(`${BASE_URL}/product/${id}`, {
+  const response = await axiosInstance.get(`${BASE_URL}/service/${id}`, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+// order routes
+export async function OrderCreate(
+  data: TOrderRequest
+): Promise<TReturnData<TOrderResponse>> {
+  const response = await axiosInstance.post(`${BASE_URL}/order/create`, data, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+export async function OrderUser(): Promise<TReturnData<TOrderResponse>> {
+  const response = await axiosInstance.get(`${BASE_URL}/order/my-order`, {
     withCredentials: true,
   });
   return response.data;

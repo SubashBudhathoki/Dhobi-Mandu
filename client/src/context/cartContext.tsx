@@ -14,10 +14,10 @@ type CartAction =
     }
   | { type: "clearCart" }
   | {
-      type: "updateCart";
+      type: "changeQty";
       payload: {
         itemId: number;
-        item: TCartItem;
+        type: "INC" | "DEC";
       };
     }
   | {
@@ -58,17 +58,20 @@ function authReducer(state: TCartState, action: CartAction): TCartState {
       });
       if (existingItemIdx > -1) {
         const existingItem = state.items[existingItemIdx];
+        const newItemTotal =
+          (existingItem.quantity + action.payload.quantity) *
+          action.payload.service.price;
         const newCartItem = {
           ...existingItem,
-          quantity: existingItem.quantity + 1,
-          total: existingItem.total + existingItem.service.price,
+          quantity: existingItem.quantity + action.payload.quantity,
+          total: newItemTotal,
         };
         const updatedItems = [...state.items];
         updatedItems[existingItemIdx] = newCartItem;
 
         const newCartState = {
           ...state,
-          total: state.total + existingItem.service.price,
+          total: CalcCartTotal(updatedItems),
           items: updatedItems,
         };
 
@@ -79,14 +82,14 @@ function authReducer(state: TCartState, action: CartAction): TCartState {
 
       const newCartItem = {
         service: action.payload.service,
-        quantity: 1,
-        total: action.payload.service.price,
+        quantity: action.payload.quantity,
+        total: action.payload.service.price * action.payload.quantity,
       };
 
       const newCartState = {
         ...state,
         items: [...state.items, newCartItem],
-        total: state.total + newCartItem.total,
+        total: CalcCartTotal([...state.items, newCartItem]),
       };
 
       localStorage.setItem("cart", JSON.stringify(newCartState));
@@ -121,22 +124,38 @@ function authReducer(state: TCartState, action: CartAction): TCartState {
       };
     }
 
-    case "updateCart": {
+    case "changeQty": {
       const itemId = action.payload.itemId;
       const itemsInCart = [...state.items];
-      const item = action.payload.item;
-      const itemIndex = itemsInCart.findIndex(
+      const itemIdx = itemsInCart.findIndex(
         (item) => item.service.id === itemId
       );
-      if (itemIndex > -1) itemsInCart[itemIndex] = item;
-      const newTotal = CalcCartTotal(itemsInCart);
-      const newCartState = {
-        ...state,
-        items: itemsInCart,
-        total: newTotal,
-      };
-      localStorage.setItem("cart", JSON.stringify(newCartState));
-      return newCartState;
+
+      if (itemIdx > -1) {
+        const item = itemsInCart[itemIdx];
+        let newQty =
+          action.payload.type === "INC" ? item.quantity + 1 : item.quantity - 1;
+
+        if (newQty < 1) newQty = 1;
+
+        const newItemTotal = item.service.price * newQty;
+
+        const newItem = {
+          ...item,
+          quantity: newQty,
+          total: newItemTotal,
+        };
+        itemsInCart[itemIdx] = newItem;
+        const newTotal = CalcCartTotal(itemsInCart);
+        const newCartState = {
+          ...state,
+          items: itemsInCart,
+          total: newTotal,
+        };
+        localStorage.setItem("cart", JSON.stringify(newCartState));
+        return newCartState;
+      }
+      return state;
     }
 
     case "setCart": {
@@ -168,7 +187,6 @@ export default function AuthProvider({
 
   useEffect(() => {
     const cartFromLocalStorage = localStorage.getItem("cart");
-    console.log(cartFromLocalStorage);
     if (cartFromLocalStorage) {
       const cart: TCartState = JSON.parse(cartFromLocalStorage);
       dispatch({ type: "setCart", payload: cart });

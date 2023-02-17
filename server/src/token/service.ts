@@ -1,4 +1,3 @@
-import { User, Vendor } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
 export default {

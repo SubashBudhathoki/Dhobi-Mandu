@@ -1,8 +1,8 @@
-import { Product } from "@prisma/client";
+import { Service } from "@prisma/client";
 import * as z from "zod";
 import VS from "../vendor/service";
 
-const ProductSchema = z
+const ServiceSchema = z
   .object({
     name: z
       .string({
@@ -80,6 +80,6 @@ const ProductSchema = z
     }
   });
 
-export default async function Validate(data: Product) {
-  return await ProductSchema.parseAsync(data);
+export default async function Validate(data: Service) {
+  return await ServiceSchema.parseAsync(data);
 }

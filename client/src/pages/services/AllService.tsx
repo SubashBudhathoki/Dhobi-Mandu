@@ -5,7 +5,7 @@ export default function AllService() {
   return (
     <>
       <PageHeader title="Services" />
-      <ServicesComponent />
+      <ServicesComponent dataLength="FULL" />
     </>
   );
 }

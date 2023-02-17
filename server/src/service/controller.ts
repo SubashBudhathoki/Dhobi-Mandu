@@ -1,15 +1,15 @@
 import { ZodError } from "zod";
 import { Request, Response } from "express";
-import ProductService from "./service";
+import ServiceService from "./service";
 import ErrorHandle from "../error/service";
 export default {
   showAll: async function (req: Request, res: Response) {
     try {
-      const products = await ProductService.getAll();
+      const services = await ServiceService.getAll();
       return res.status(201).json({
         success: true,
-        data: products,
-        message: "Show All products",
+        data: services,
+        message: "Show All services",
       });
     } catch (error: any) {
       const handleError = ErrorHandle.handleError(error);
@@ -19,7 +19,6 @@ export default {
   showOne: async function (req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);
-      console.log(id);
       if (isNaN(id)) {
         throw new ZodError([
           {
@@ -29,17 +28,17 @@ export default {
           },
         ]);
       }
-      const product = await ProductService.getOne(id);
-      if (!product)
+      const Service = await ServiceService.getOne(id);
+      if (!Service)
         return res.status(404).json({
           success: false,
           data: {},
-          message: "Product Not Found",
+          message: "Service Not Found",
         });
       return res.status(201).json({
         success: true,
-        data: product,
-        message: "Show One product",
+        data: Service,
+        message: "Show One Service",
       });
     } catch (error: any) {
       const handleError = ErrorHandle.handleError(error);
@@ -51,11 +50,11 @@ export default {
       const vendorId = req.vendorId;
 
       const data = req.body;
-      const savedProduct = await ProductService.create({ ...data, vendorId });
+      const savedService = await ServiceService.create({ ...data, vendorId });
       return res.status(201).json({
         success: true,
-        data: savedProduct,
-        message: "Product Created",
+        data: savedService,
+        message: "Service Created",
       });
     } catch (error: any) {
       const handleError = ErrorHandle.handleError(error);
@@ -77,14 +76,14 @@ export default {
       const data = req.body;
       const vendorId = req.vendorId;
 
-      const updatedProduct = await ProductService.update(id, {
+      const updatedService = await ServiceService.update(id, {
         ...data,
         vendorId,
       });
       return res.status(201).json({
         success: true,
-        data: updatedProduct,
-        message: "Product Updated",
+        data: updatedService,
+        message: "Service Updated",
       });
     } catch (error) {
       const handleError = ErrorHandle.handleError(error);
@@ -102,11 +101,11 @@ export default {
             code: "custom",
           },
         ]);
-      await ProductService.delete(id);
+      await ServiceService.delete(id);
       return res.status(201).json({
         success: true,
         data: {},
-        message: "Product Deleted",
+        message: "Service Deleted",
       });
     } catch (error) {
       const handleError = ErrorHandle.handleError(error);

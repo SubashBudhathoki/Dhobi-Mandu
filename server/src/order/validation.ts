@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { ORDER_STATE, OrderItem } from "@prisma/client";
 export type Order = z.infer<typeof OrderSchema>;
-import ProductService from "../product/service";
+import ServiceService from "../service/service";
 
 const OrderStateSchema = z.object({
   state: z.enum(
@@ -22,18 +22,18 @@ const OrderStateSchema = z.object({
 
 const OrderItemSchema = z.array(
   z.object({
-    productId: z
+    serviceId: z
       .number({
         errorMap: (err) => {
-          return { message: "Product Id is Required" };
+          return { message: "Service Id is Required" };
         },
       })
       .superRefine(async function (v, ctx) {
-        const product = await ProductService.getOne(v);
-        if (!product) {
+        const Service = await ServiceService.getOne(v);
+        if (!Service) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Product not found",
+            message: "Service not found",
           });
         }
       }),
@@ -53,7 +53,7 @@ const OrderSchema = z.object({
 });
 
 export default async function ValidateOrderItems(
-  data: { productId: number; quantity: number }[]
+  data: { serviceId: number; quantity: number }[]
 ) {
   return await OrderItemSchema.parseAsync(data);
 }

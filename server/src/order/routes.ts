@@ -7,7 +7,6 @@ const router = Router();
 // user
 router.post("/create", UserMiddleware.isLoggedIn, OrderController.create);
 router.get("/my-order", UserMiddleware.isLoggedIn, OrderController.getMyOrders);
-export default router;
 
 // vendor
 router.get("/", VendorMiddleware.isLoggedIn, OrderController.getAllOrders);
@@ -17,3 +16,4 @@ router.patch(
   VendorMiddleware.isLoggedIn,
   OrderController.changeOrderState
 );
+export default router;
