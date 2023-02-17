@@ -6,7 +6,7 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { useRef, useState } from "react";
-import CustomLoader from "./CustomLoader";
+import CustomLoader from "../common/CustomLoader";
 
 const center = {
   lat: 40.7128,

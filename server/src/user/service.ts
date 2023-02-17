@@ -44,12 +44,23 @@ export default {
     // throws zod error if validation fails
     ValidateRegister(data);
 
-    const userInDb = await prisma.user.findUnique({
+    const userEmailInDb_prm = prisma.user.findUnique({
       where: {
         email: data.email,
       },
     });
-    if (userInDb)
+    const userNameInDb_prm = prisma.user.findUnique({
+      where: {
+        name: data.name,
+      },
+    });
+
+    const [userEmailInDb, userNameInDb] = await Promise.all([
+      userEmailInDb_prm,
+      userNameInDb_prm,
+    ]);
+
+    if (userEmailInDb || userNameInDb)
       throw new PrismaClientKnownRequestError("User already exists", {
         clientVersion: "2.19.0",
         code: "P2002",
@@ -57,9 +68,10 @@ export default {
 
     const salt = await genSalt();
     const password = await hash(data.password, salt);
-    return await prisma.user.create({
+    const createdUser = prisma.user.create({
       data: { ...data, password: password },
     });
+    return RemoveKeyFromObj(createdUser, "password");
   },
   update: async function (id: number, data: User) {
     return await prisma.user.update({

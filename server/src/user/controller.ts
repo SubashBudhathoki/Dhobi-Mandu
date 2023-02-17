@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 import ErrorHandle from "../error/service";
 import UserService from "./service";
@@ -76,12 +77,21 @@ export default {
     }
   },
 
-  dashboard: async function (req: Request, res: Response) {
+  me: async function (req: Request, res: Response) {
     try {
+      const userId = req.userId;
+      const user = await UserService.getById(userId);
+      if (!user || user.id !== userId)
+        return res.status(404).json({
+          success: false,
+          data: {},
+          message: "User not found",
+        });
+
       return res.status(201).json({
         success: true,
-        data: {},
-        message: "Dashboard",
+        data: user,
+        message: "My Data",
       });
     } catch (error) {
       const handleError = ErrorHandle.handleError(error);

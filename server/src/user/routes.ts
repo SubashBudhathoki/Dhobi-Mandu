@@ -3,7 +3,7 @@ import UC from "./controller";
 import Middleware from "./middleware";
 const router = Router();
 
-router.get("/dashboard", Middleware.isLoggedIn, UC.dashboard);
+router.get("/me", Middleware.isLoggedIn, UC.me);
 router.post("/login", UC.login);
 router.post("/register", UC.register);
 router.delete("/logout", UC.logout);
