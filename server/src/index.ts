@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
-dotenv.config();
+
+if (process.env.NODE_ENV === "production") dotenv.config({ path: ".env.prod" });
+else dotenv.config({ path: ".env.dev" });
 
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -18,7 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [
+      process.env.CLIENT_URL_DEV as string,
+      process.env.CLIENT_URL_PROD as string,
+    ],
     credentials: true,
   })
 );

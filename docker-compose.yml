@@ -1,0 +1,16 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env.prod
+    volumes:
+      - ./server:/app/public
+  client:
+    build: ./client 
+    ports:
+      - "4173:4173"
+    env_file:
+      - ./client/.env
