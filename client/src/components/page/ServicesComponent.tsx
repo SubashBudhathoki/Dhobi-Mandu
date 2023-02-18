@@ -112,33 +112,29 @@ function SingleServiceCart({ service }: { service: TSingleService }) {
       </Text>
 
       <Flex gap="md">
-        {authState.authenticated ? (
-          <Button
-            onClick={() => {
-              dispatch({
-                type: "addToCart",
-                payload: {
-                  quantity: 1,
-                  service: service,
-                  total: 1 * service.price,
-                },
-              });
-            }}
-            variant="light"
-            color="blue"
-            fullWidth
-            mt="md"
-            radius="md"
-          >
-            Add to Cart
-          </Button>
-        ) : (
-          <ALink href="/login">
-            <Button fullWidth variant="light" color="blue">
-              Login
+        {authState.authenticated &&
+          authState.vendor === undefined &&
+          authState.user !== undefined && (
+            <Button
+              onClick={() => {
+                dispatch({
+                  type: "addToCart",
+                  payload: {
+                    quantity: 1,
+                    service: service,
+                    total: 1 * service.price,
+                  },
+                });
+              }}
+              variant="light"
+              color="blue"
+              fullWidth
+              mt="md"
+              radius="md"
+            >
+              Add to Cart
             </Button>
-          </ALink>
-        )}
+          )}
         <ALink href={`/service/${service.id}`}>
           <Button variant="light" color="blue" fullWidth mt="md" radius="md">
             View More

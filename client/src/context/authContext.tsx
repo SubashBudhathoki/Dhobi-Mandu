@@ -49,6 +49,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             id: action.payload.user.id,
             name: action.payload.user.name,
             email: action.payload.user.email,
+            address: action.payload.user.address,
           },
           vendor: undefined,
         };
@@ -59,6 +60,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             id: action.payload.vendor.id,
             name: action.payload.vendor.name,
             email: action.payload.vendor.email,
+            address: action.payload.vendor.address,
           },
           user: undefined,
         };
@@ -71,6 +73,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
           id: action.payload.id,
           name: action.payload.name,
           email: action.payload.email,
+          address: action.payload.address,
         },
       };
     case "logout":
@@ -88,6 +91,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             id: action.payload.user.id,
             name: action.payload.user.name,
             email: action.payload.user.email,
+            address: action.payload.user.address,
           },
           vendor: undefined,
         };
@@ -100,6 +104,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             id: action.payload.vendor.id,
             name: action.payload.vendor.name,
             email: action.payload.vendor.email,
+            address: action.payload.vendor.address,
           },
           user: undefined,
         };

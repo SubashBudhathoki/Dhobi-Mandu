@@ -72,6 +72,15 @@ export async function UserLogout(): Promise<TReturnData<{}>> {
   return response.data;
 }
 
+export async function UserUpdate(
+  data: Omit<TUser, "id">
+): Promise<TReturnData<TUser>> {
+  const response = await axiosInstance.patch(`${BASE_URL}/user/update`, data, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
 export async function ServiceGet(): Promise<TReturnData<TAllService>> {
   const response = await axiosInstance.get(`${BASE_URL}/service`, {
     withCredentials: true,
@@ -182,5 +191,17 @@ export async function VendorLogin(data: {
   const response = await axiosInstance.post(`${BASE_URL}/vendor/login`, data, {
     withCredentials: true,
   });
+  return response.data;
+}
+export async function VendorUpdate(
+  data: Omit<TUser, "id">
+): Promise<TReturnData<TUser>> {
+  const response = await axiosInstance.patch(
+    `${BASE_URL}/vendor/update`,
+    data,
+    {
+      withCredentials: true,
+    }
+  );
   return response.data;
 }

@@ -10,7 +10,7 @@ import { Navigate } from "react-router-dom";
 export default function NavBar() {
   const { authState, dispatch } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const [mobNavOpen, setMobNavOpen] = useState(false);
   const {
     isLoading: logoutLoading,
     isSuccess: logoutSuccess,
@@ -23,43 +23,6 @@ export default function NavBar() {
     if (logoutSuccess) dispatch({ type: "logout" });
   }, [logoutSuccess]);
 
-  if (
-    !authState.authenticated &&
-    authState.user === undefined &&
-    authState.vendor === undefined
-  ) {
-    console.log("NAVIGATE");
-    return <Navigate to="/" />;
-  }
-  const NoAuthNavItem = (
-    <>
-      <ALink href="/login" className="nav-item nav-link">
-        Login
-      </ALink>
-      <ALink href="/register" className="nav-item nav-link">
-        Register
-      </ALink>
-    </>
-  );
-  const AuthNavItem = (
-    <>
-      <ALink
-        href={authState.user !== undefined ? "/dashboard" : "/vendor/dashboard"}
-        className="nav-item nav-link"
-      >
-        Dashboard
-      </ALink>
-      {authState.user !== undefined && (
-        <p
-          onClick={() => setDrawerOpen(true)}
-          role="button"
-          className="nav-item nav-link"
-        >
-          Cart
-        </p>
-      )}
-    </>
-  );
   return (
     <>
       <div className="container-fluid position-relative nav-bar p-0">
@@ -78,11 +41,14 @@ export default function NavBar() {
               className="navbar-toggler"
               data-toggle="collapse"
               data-target="#navbarCollapse"
+              onClick={() => setMobNavOpen(!mobNavOpen)}
             >
               <span className="navbar-toggler-icon"></span>
             </button>
             <div
-              className="collapse navbar-collapse justify-content-between px-3"
+              className={`${
+                mobNavOpen === false && "collapse"
+              } navbar-collapse justify-content-between px-3`}
               id="navbarCollapse"
             >
               <div className="navbar-nav ml-auto py-0">
@@ -95,22 +61,54 @@ export default function NavBar() {
                 <ALink href="/service" className="nav-item nav-link">
                   Services
                 </ALink>
-                <p className="nav-item nav-link"> | </p>
-                {authState.authenticated === false && NoAuthNavItem}
-                {authState.authenticated && AuthNavItem}
-
-                <p className="nav-item nav-link"> | </p>
-                <Text
-                  color="dimmed"
-                  role="button"
-                  className="nav-item nav-link"
-                  onClick={() => {
-                    if (!logoutLoading) logoutUser();
-                    // redirect("/");
-                  }}
-                >
-                  Logout
-                </Text>
+                {/* <p className="nav-item nav-link"> | </p> */}
+                {authState.authenticated === false && (
+                  <>
+                    <ALink href="/login" className="nav-item nav-link">
+                      Login
+                    </ALink>
+                    <ALink href="/register" className="nav-item nav-link">
+                      Register
+                    </ALink>
+                    <ALink href="/vendor/login" className="nav-item nav-link">
+                      I am a Vendor
+                    </ALink>
+                  </>
+                )}
+                {authState.authenticated && (
+                  <>
+                    <ALink
+                      href={
+                        authState.user !== undefined
+                          ? "/dashboard"
+                          : "/vendor/dashboard"
+                      }
+                      className="nav-item nav-link"
+                    >
+                      Dashboard
+                    </ALink>
+                    {authState.user !== undefined && (
+                      <p
+                        onClick={() => setDrawerOpen(true)}
+                        role="button"
+                        className="nav-item nav-link"
+                      >
+                        Cart
+                      </p>
+                    )}
+                    {/* <p className="nav-item nav-link"> | </p> */}
+                    <Text
+                      color="dimmed"
+                      role="button"
+                      className="nav-item nav-link"
+                      onClick={() => {
+                        if (!logoutLoading) logoutUser();
+                      }}
+                    >
+                      Logout
+                    </Text>
+                  </>
+                )}
               </div>
             </div>
           </nav>

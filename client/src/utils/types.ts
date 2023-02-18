@@ -11,6 +11,7 @@ export type TUser = {
   id: number;
   name: string;
   email: string;
+  address: string;
 };
 
 export type TCartItem = {

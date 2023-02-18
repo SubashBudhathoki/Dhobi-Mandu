@@ -15,6 +15,7 @@ import PageHeader from "../../partials/PageHeader";
 import { TSingleService } from "../../utils/types";
 import { Plus, Minus, Trash } from "tabler-icons-react";
 import { useState } from "react";
+import { useAuth } from "../../context/authContext";
 
 export default function SingleService() {
   const { id } = useParams();
@@ -52,6 +53,7 @@ export default function SingleService() {
 function DisplayService({ service }: { service: TSingleService }) {
   const { dispatch } = useCart();
   const [qty, setQty] = useState(1);
+  const { authState } = useAuth();
   return (
     <div className="container-fluid py-5">
       <div className="container pt-0 pt-lg-4">
@@ -83,61 +85,65 @@ function DisplayService({ service }: { service: TSingleService }) {
             >
               {service.description}
             </Spoiler>
-            <Flex gap="lg" align="center">
-              <div className="pt-3">
-                <div className="d-flex align-items-center">
-                  <Button
-                    onClick={() => {
-                      dispatch({
-                        type: "addToCart",
-                        payload: {
-                          quantity: qty,
-                          service: service,
-                          total: service.price * qty,
-                        },
-                      });
-                    }}
-                    variant="light"
-                  >
-                    Add To Cart
-                  </Button>
-                </div>
-              </div>
-              <div className="pt-3">
-                <div className="d-flex align-items-center">
-                  <Tooltip label="Increase Quantity">
-                    <ActionIcon
-                      onClick={() => {
-                        setQty((pq) => pq + 1);
-                      }}
-                      size="sm"
-                      variant="outline"
-                      color="blue"
-                    >
-                      <Plus />
-                    </ActionIcon>
-                  </Tooltip>
-                  <div className="mx-2">x {qty}</div>
-                  <Tooltip label="Decrease Quantity">
-                    <ActionIcon
-                      onClick={() => {
-                        setQty((pq) => {
-                          const newPq = pq - 1;
-                          if (newPq < 1) {
-                            return 1;
-                          } else return newPq;
-                        });
-                      }}
-                      size="sm"
-                      variant="outline"
-                      color="blue"
-                    >
-                      <Minus />
-                    </ActionIcon>
-                  </Tooltip>
-                </div>
-              </div>
-            </Flex>
+            {authState.authenticated &&
+              authState.user !== undefined &&
+              authState.vendor === undefined && (
+                <Flex gap="lg" align="center">
+                  <div className="pt-3">
+                    <div className="d-flex align-items-center">
+                      <Button
+                        onClick={() => {
+                          dispatch({
+                            type: "addToCart",
+                            payload: {
+                              quantity: qty,
+                              service: service,
+                              total: service.price * qty,
+                            },
+                          });
+                        }}
+                        variant="light"
+                      >
+                        Add To Cart
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="pt-3">
+                    <div className="d-flex align-items-center">
+                      <Tooltip label="Increase Quantity">
+                        <ActionIcon
+                          onClick={() => {
+                            setQty((pq) => pq + 1);
+                          }}
+                          size="sm"
+                          variant="outline"
+                          color="blue"
+                        >
+                          <Plus />
+                        </ActionIcon>
+                      </Tooltip>
+                      <div className="mx-2">x {qty}</div>
+                      <Tooltip label="Decrease Quantity">
+                        <ActionIcon
+                          onClick={() => {
+                            setQty((pq) => {
+                              const newPq = pq - 1;
+                              if (newPq < 1) {
+                                return 1;
+                              } else return newPq;
+                            });
+                          }}
+                          size="sm"
+                          variant="outline"
+                          color="blue"
+                        >
+                          <Minus />
+                        </ActionIcon>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </Flex>
+              )}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import PageHeader from "../../../partials/PageHeader";
-import { PasswordInput, TextInput, Button } from "@mantine/core";
+import { PasswordInput, TextInput, Button, Paper } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import ALink from "../../../components/common/ALink";
 import LoginSchema from "../../../models/auth/login";
@@ -59,43 +59,57 @@ export default function Login() {
   return (
     <>
       <PageHeader title="Login" />
-      <div className="card d-flex justify-content-center align-items-center p-5 m-5 mx-auto">
-        <div className="w-50">
-          {error && error.response && error.response.data && (
-            <ServerError message={error.response.data.message || ""} />
-          )}
-          <form onSubmit={form.onSubmit(() => fetchLogin())}>
-            <div className="form-outline mb-4">
-              <TextInput
-                type="email"
-                label="Email"
-                placeholder="Enter your email"
-                {...form.getInputProps("email")}
-              />
-            </div>
+      <div className="position-relative">
+        <div
+          className="d-flex justify-content-center align-items-center p-5 m-5 mx-auto position-relative"
+          style={{
+            height: "300px",
+          }}
+        >
+          <Paper
+            shadow="sm"
+            className="position-absolute bg-white p-5"
+            style={{
+              width: "500px",
+              top: "-50%",
+            }}
+          >
+            {error && error.response && error.response.data && (
+              <ServerError message={error.response.data.message || ""} />
+            )}
+            <form onSubmit={form.onSubmit(() => fetchLogin())}>
+              <div className="form-outline mb-4">
+                <TextInput
+                  type="email"
+                  label="Email"
+                  placeholder="Enter your email"
+                  {...form.getInputProps("email")}
+                />
+              </div>
 
-            <div className="form-outline mb-4">
-              <PasswordInput
-                label="Password"
-                placeholder="Enter Password"
-                {...form.getInputProps("password")}
-              />
-            </div>
+              <div className="form-outline mb-4">
+                <PasswordInput
+                  label="Password"
+                  placeholder="Enter Password"
+                  {...form.getInputProps("password")}
+                />
+              </div>
 
-            <Button
-              loading={isLoading}
-              type="submit"
-              fullWidth
-              className="mb-4"
-            >
-              Login
-            </Button>
-            <div className="text-center">
-              <p>
-                Not a member? <ALink href="/register">Register</ALink>
-              </p>
-            </div>
-          </form>
+              <Button
+                loading={isLoading}
+                type="submit"
+                fullWidth
+                className="mb-4"
+              >
+                Login
+              </Button>
+              <div className="text-center">
+                <p>
+                  Not a member? <ALink href="/register">Register</ALink>
+                </p>
+              </div>
+            </form>
+          </Paper>
         </div>
       </div>
     </>

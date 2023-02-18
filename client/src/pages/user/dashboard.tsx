@@ -17,6 +17,7 @@ import { OrderUser, TReturnData, TReturnError } from "../../api/api";
 import { TOrderResponse } from "../../utils/types";
 import { AxiosError } from "axios";
 import CustomLoader from "../../components/common/CustomLoader";
+import AccountInfoTab from "../vendor/AccountInfoTab";
 
 const ORDER_STATES = ["RECEIVED", "WASHING", "SHIPPING", "COMPLETED"];
 
@@ -38,7 +39,7 @@ function Dashboard() {
               <OrdersTab />
             </Tabs.Panel>
             <Tabs.Panel value="account-info">
-              <AccountInfoTab />
+              <AccountInfoTab entityType="user" />
             </Tabs.Panel>
           </div>
         </Tabs>
@@ -148,10 +149,6 @@ function OrderStatusTimeLine({ active = 0 }: { active?: number }) {
       ))}
     </Timeline>
   );
-}
-
-function AccountInfoTab() {
-  return <div>Account Information</div>;
 }
 
 export default WithAuth(Dashboard);

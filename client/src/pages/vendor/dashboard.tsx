@@ -9,15 +9,24 @@ import {
   Badge,
   Table,
   ScrollArea,
-  Button,
-  Rating,
   Tooltip,
   ActionIcon,
   Indicator,
   Box,
   Overlay,
   Center,
+  TextInput,
+  Button,
 } from "@mantine/core";
+
+import {
+  GoogleMap,
+  Marker,
+  DirectionsRenderer,
+  useJsApiLoader,
+  Autocomplete,
+} from "@react-google-maps/api";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   OrderChangeState,
@@ -31,6 +40,7 @@ import CustomLoader from "../../components/common/CustomLoader";
 import { ShoppingCartOff } from "tabler-icons-react";
 import { useEffect, useState } from "react";
 import AllServices from "../../components/page/vendor/AllServices";
+import AccountInfoTab from "./AccountInfoTab";
 function dashboard() {
   const { authState } = useAuth();
   return (
@@ -39,10 +49,11 @@ function dashboard() {
         title={authState.vendor ? "Hello " + authState.vendor?.name : ""}
       />
       <div className="container">
-        <Tabs defaultValue="orders" title="My Account" orientation="vertical">
+        <Tabs defaultValue="acc_info" title="My Account" orientation="vertical">
           <Tabs.List>
             <Tabs.Tab value="orders">Orders</Tabs.Tab>
             <Tabs.Tab value="services">Services</Tabs.Tab>
+            <Tabs.Tab value="acc_info">Account Information</Tabs.Tab>
           </Tabs.List>
           <div className="ml-4 w-100">
             <Tabs.Panel value="orders">
@@ -50,6 +61,9 @@ function dashboard() {
             </Tabs.Panel>
             <Tabs.Panel value="services">
               <AllServices />
+            </Tabs.Panel>
+            <Tabs.Panel value="acc_info">
+              <AccountInfoTab entityType="vendor" />
             </Tabs.Panel>
           </div>
         </Tabs>
@@ -72,10 +86,9 @@ function OrdersTab() {
   });
 
   const {
-    data: changeStateData,
-    error: changeStateError,
-    isLoading: changeStateLoading,
-    mutate: mutateChangeState,
+    isSuccess: mutateCancelOrderSuccess,
+    isLoading: mutateCancelOrderLoading,
+    mutate: mutateCancelOrder,
   } = useMutation({
     mutationFn: (data: { orderId: number }) =>
       OrderChangeState({ state: "CANCELLED", id: data.orderId }),
@@ -88,6 +101,9 @@ function OrdersTab() {
   useEffect(() => {
     orderRefetch();
   }, [refreshData]);
+  useEffect(() => {
+    if (mutateCancelOrderSuccess) handleRefetchData();
+  }, [mutateCancelOrderSuccess]);
 
   return (
     <div>
@@ -115,11 +131,11 @@ function OrdersTab() {
                 </Flex>
                 <Tooltip label="Cancel Order">
                   <ActionIcon
+                    loading={mutateCancelOrderLoading}
                     onClick={() => {
-                      mutateChangeState({
+                      mutateCancelOrder({
                         orderId: order.id,
                       });
-                      handleRefetchData();
                     }}
                     color="red"
                     variant="light"
