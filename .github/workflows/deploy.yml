@@ -24,4 +24,4 @@ jobs:
       - name: Start Docker Compose
         run: |
           cd $(pwd)
-          docker-compose up -d
+          sudo docker-compose up -d
