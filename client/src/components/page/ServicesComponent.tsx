@@ -6,6 +6,7 @@ import { Card, Image, Text, Badge, Button, Group, Flex } from "@mantine/core";
 import { useCart } from "../../context/cartContext";
 import ALink from "../common/ALink";
 import { useAuth } from "../../context/authContext";
+import { AxiosError } from "axios";
 
 export default function Services({
   dataLength,
@@ -16,7 +17,7 @@ export default function Services({
     data: serviceData,
     isLoading: serviceLoading,
     error: serviceError,
-  } = useQuery<TReturnData<TAllService>, TReturnError>({
+  } = useQuery<TReturnData<TAllService>, AxiosError<TReturnError>>({
     queryKey: ["all-services"],
     queryFn: () => ServiceGet(),
   });

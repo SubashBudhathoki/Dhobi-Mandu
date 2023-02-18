@@ -38,6 +38,7 @@ export type TOrderResponse = Array<{
   userId: number;
   total: number;
   state: TORDER_STATE;
+  user: TUser;
   OrderItems: Array<{
     id: number;
     serviceId: number;

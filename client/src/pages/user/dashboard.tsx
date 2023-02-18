@@ -7,6 +7,8 @@ import {
   Badge,
   Table,
   ScrollArea,
+  Overlay,
+  Center,
 } from "@mantine/core";
 import WithAuth from "../../components/hoc/WithAuth";
 import { useAuth } from "../../context/authContext";
@@ -66,6 +68,7 @@ function OrdersTab() {
               withBorder
               style={{
                 width: "100%",
+                position: "relative",
               }}
               shadow="sm"
               radius="md"
@@ -113,6 +116,17 @@ function OrdersTab() {
                   )}
                 />
               </Flex>
+              {order.state === "CANCELLED" && (
+                <Overlay color="red">
+                  <Center
+                    style={{
+                      height: "100%",
+                    }}
+                  >
+                    <h2 className="text-white">Cancelled</h2>
+                  </Center>
+                </Overlay>
+              )}
             </Paper>
           ))}
         </Flex>
@@ -123,7 +137,7 @@ function OrdersTab() {
 
 function OrderStatusTimeLine({ active = 0 }: { active?: number }) {
   return (
-    <Timeline align="right" active={active} bulletSize={24} lineWidth={2}>
+    <Timeline align="right" active={active} bulletSize={24} lineWidth={4}>
       {ORDER_STATES.map((state, idx) => (
         <Timeline.Item
           bulletSize={20}

@@ -1,11 +1,12 @@
 import ALink from "../components/common/ALink";
 import { useAuth } from "../context/authContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartDrawer from "../components/cart/CartDrawer";
 import { useMutation } from "@tanstack/react-query";
 import { TReturnData, TReturnError, UserLogout } from "../api/api";
 import { AxiosError } from "axios";
 import { Text } from "@mantine/core";
+import { Navigate } from "react-router-dom";
 export default function NavBar() {
   const { authState, dispatch } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -18,7 +19,47 @@ export default function NavBar() {
   } = useMutation<TReturnData<{}>, AxiosError<TReturnError>>({
     mutationFn: () => UserLogout(),
   });
+  useEffect(() => {
+    if (logoutSuccess) dispatch({ type: "logout" });
+  }, [logoutSuccess]);
 
+  if (
+    !authState.authenticated &&
+    authState.user === undefined &&
+    authState.vendor === undefined
+  ) {
+    console.log("NAVIGATE");
+    return <Navigate to="/" />;
+  }
+  const NoAuthNavItem = (
+    <>
+      <ALink href="/login" className="nav-item nav-link">
+        Login
+      </ALink>
+      <ALink href="/register" className="nav-item nav-link">
+        Register
+      </ALink>
+    </>
+  );
+  const AuthNavItem = (
+    <>
+      <ALink
+        href={authState.user !== undefined ? "/dashboard" : "/vendor/dashboard"}
+        className="nav-item nav-link"
+      >
+        Dashboard
+      </ALink>
+      {authState.user !== undefined && (
+        <p
+          onClick={() => setDrawerOpen(true)}
+          role="button"
+          className="nav-item nav-link"
+        >
+          Cart
+        </p>
+      )}
+    </>
+  );
   return (
     <>
       <div className="container-fluid position-relative nav-bar p-0">
@@ -55,30 +96,9 @@ export default function NavBar() {
                   Services
                 </ALink>
                 <p className="nav-item nav-link"> | </p>
-                {!authState.authenticated && (
-                  <>
-                    <ALink href="/login" className="nav-item nav-link">
-                      Login
-                    </ALink>
-                    <ALink href="/register" className="nav-item nav-link">
-                      Register
-                    </ALink>
-                  </>
-                )}
-                {authState.authenticated && (
-                  <>
-                    <ALink href="/dashboard" className="nav-item nav-link">
-                      Dashboard
-                    </ALink>
-                    <p
-                      onClick={() => setDrawerOpen(true)}
-                      role="button"
-                      className="nav-item nav-link"
-                    >
-                      Cart
-                    </p>
-                  </>
-                )}
+                {authState.authenticated === false && NoAuthNavItem}
+                {authState.authenticated && AuthNavItem}
+
                 <p className="nav-item nav-link"> | </p>
                 <Text
                   color="dimmed"
@@ -86,6 +106,7 @@ export default function NavBar() {
                   className="nav-item nav-link"
                   onClick={() => {
                     if (!logoutLoading) logoutUser();
+                    // redirect("/");
                   }}
                 >
                   Logout

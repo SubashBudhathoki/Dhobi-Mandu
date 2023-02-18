@@ -1,13 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-import Services from "../components/page/ServicesComponent";
 import About from "../pages/about";
-import Login from "../pages/auth/login";
-import Register from "../pages/auth/register";
+import Login from "../pages/auth/user/login";
+import Register from "../pages/auth/user/register";
+import VendorLogin from "../pages/auth/vendor/login";
 import Checkout from "../pages/checkout";
 import Home from "../pages/home";
 import AllService from "../pages/services/AllService";
 import SingleService from "../pages/services/SingleService";
 import Dashboard from "../pages/user/dashboard";
+import VendorDashboard from "../pages/vendor/dashboard";
 
 export default function Router() {
   return (
@@ -16,13 +17,12 @@ export default function Router() {
       <Route path="/about" element={<About />} />
       <Route path="/service" element={<AllService />} />
       <Route path="/service/:id" element={<SingleService />} />
-      <Route path="/vendor" element={<div>Vendor Home</div>} />
-      <Route path="/vendor/login" element={<div>Vendor Login</div>} />
-      <Route path="/user" element={<div>User Dashboard</div>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+      <Route path="/vendor/login" element={<VendorLogin />} />
     </Routes>
   );
 }

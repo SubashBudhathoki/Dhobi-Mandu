@@ -2,6 +2,7 @@ import {
   TAllService,
   TOrderRequest,
   TOrderResponse,
+  TORDER_STATE,
   TSingleService,
   TUser,
 } from "./../utils/types";
@@ -15,15 +16,7 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-axiosRetry(axiosInstance, {
-  retries: 0,
-  retryCondition: () => false,
-
-  onRetry: (err) => {
-    const config = err;
-    console.log(`Retry attempt `);
-  },
-});
+axiosRetry(axiosInstance, { retries: 1 });
 
 export type TReturnData<T> = {
   success: boolean;
@@ -95,6 +88,39 @@ export async function ServiceGetById(
   return response.data;
 }
 
+export async function ServiceCreate(
+  data: Omit<TSingleService, "id">
+): Promise<TReturnData<TSingleService>> {
+  const response = await axiosInstance.post(
+    `${BASE_URL}/service/create`,
+    data,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+export async function ServiceUpdate(
+  data: TSingleService
+): Promise<TReturnData<TSingleService>> {
+  const response = await axiosInstance.patch(
+    `${BASE_URL}/service/update/${data.id}`,
+    data,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+export async function ServiceDelete(id: number): Promise<TReturnData<{}>> {
+  const response = await axiosInstance.delete(
+    `${BASE_URL}/service/delete/${id}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
 // order routes
 export async function OrderCreate(
   data: TOrderRequest
@@ -104,8 +130,56 @@ export async function OrderCreate(
   });
   return response.data;
 }
+export async function OrderChangeState(data: {
+  state: TORDER_STATE;
+  id: number;
+}): Promise<TReturnData<TOrderResponse>> {
+  const response = await axiosInstance.patch(
+    `${BASE_URL}/order/change-order-state/${data.id}`,
+    {
+      state: data.state,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
 export async function OrderUser(): Promise<TReturnData<TOrderResponse>> {
   const response = await axiosInstance.get(`${BASE_URL}/order/my-order`, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function OrderGet(): Promise<TReturnData<TOrderResponse>> {
+  const response = await axiosInstance.get(`${BASE_URL}/order`, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+// vendor
+export async function VendorGet(): Promise<TReturnData<TUser>> {
+  const response = await axiosInstance.get(`${BASE_URL}/vendor/me`, {
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function VendorLogin(data: {
+  email: string;
+  password: string;
+}): Promise<
+  TReturnData<{
+    vendor: TUser;
+    token: {
+      accessToken: string;
+    };
+  }>
+> {
+  const response = await axiosInstance.post(`${BASE_URL}/vendor/login`, data, {
     withCredentials: true,
   });
   return response.data;

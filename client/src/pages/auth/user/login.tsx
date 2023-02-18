@@ -1,18 +1,18 @@
-import PageHeader from "../../partials/PageHeader";
+import PageHeader from "../../../partials/PageHeader";
 import { PasswordInput, TextInput, Button } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-import ALink from "../../components/common/ALink";
-import LoginSchema from "../../models/auth/login";
+import ALink from "../../../components/common/ALink";
+import LoginSchema from "../../../models/auth/login";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TReturnData, TReturnError, UserLogin } from "../../api/api";
+import { TReturnData, TReturnError, UserLogin } from "../../../api/api";
 import { AxiosError } from "axios";
-import ServerError from "../../components/common/ServerError";
+import ServerError from "../../../components/common/ServerError";
 import { Navigate, redirect } from "react-router";
-import { TUser } from "../../utils/types";
-import { useAuth } from "../../context/authContext";
+import { TUser } from "../../../utils/types";
+import { useAuth } from "../../../context/authContext";
 import { useEffect } from "react";
 
-export default function Register() {
+export default function Login() {
   const form = useForm({
     initialValues: {
       password: "",
@@ -47,12 +47,12 @@ export default function Register() {
     if (data) {
       dispatch({
         type: "login",
-        payload: data.data.user,
+        payload: { user: data.data.user, vendor: undefined },
       });
     }
   }, [data]);
 
-  if (authState.authenticated) {
+  if (authState.authenticated && authState.user !== undefined) {
     return <Navigate to="/" />;
   }
 

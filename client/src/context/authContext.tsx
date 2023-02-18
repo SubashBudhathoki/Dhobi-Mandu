@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { TReturnData, TReturnError, UserGet } from "../api/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ServerError from "../components/common/ServerError";
+import { TReturnData, TReturnError, UserGet, VendorGet } from "../api/api";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import CustomLoader from "../components/common/CustomLoader";
 import { TUser } from "../utils/types";
 
 type AuthState = {
   user: TUser | undefined;
+  vendor: TUser | undefined;
   authenticated: boolean;
 };
 
@@ -16,9 +16,15 @@ type AuthAction =
       type: "register";
       payload: TUser;
     }
-  | { type: "login"; payload: TUser }
+  | {
+      type: "login";
+      payload: { user: TUser | undefined; vendor: TUser | undefined };
+    }
   | { type: "logout" }
-  | { type: "setMe"; payload: TUser };
+  | {
+      type: "setMe";
+      payload: { user: TUser | undefined; vendor: TUser | undefined };
+    };
 
 type AuthContextType = {
   authState: AuthState;
@@ -27,6 +33,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   authState: {
     user: undefined,
+    vendor: undefined,
     authenticated: false,
   },
   dispatch: () => {},
@@ -35,17 +42,31 @@ const AuthContext = createContext<AuthContextType>({
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case "login":
-      return {
-        authenticated: true,
-        user: {
-          id: action.payload.id,
-          name: action.payload.name,
-          email: action.payload.email,
-        },
-      };
+      if (action.payload.user)
+        return {
+          authenticated: true,
+          user: {
+            id: action.payload.user.id,
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          },
+          vendor: undefined,
+        };
+      else if (action.payload.vendor)
+        return {
+          authenticated: true,
+          vendor: {
+            id: action.payload.vendor.id,
+            name: action.payload.vendor.name,
+            email: action.payload.vendor.email,
+          },
+          user: undefined,
+        };
+      return state;
     case "register":
       return {
         authenticated: true,
+        vendor: undefined,
         user: {
           id: action.payload.id,
           name: action.payload.name,
@@ -56,16 +77,34 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
       return {
         authenticated: false,
         user: undefined,
+        vendor: undefined,
       };
     case "setMe":
-      return {
-        authenticated: true,
-        user: {
-          id: action.payload.id,
-          name: action.payload.name,
-          email: action.payload.email,
-        },
-      };
+      console.log("SET ME");
+      if (action.payload.user)
+        return {
+          authenticated: true,
+          user: {
+            id: action.payload.user.id,
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          },
+          vendor: undefined,
+        };
+      else if (action.payload.vendor) {
+        console.log("VENDOR");
+        console.log("RETURN NEW STATE WITH VENDOR");
+        return {
+          authenticated: true,
+          vendor: {
+            id: action.payload.vendor.id,
+            name: action.payload.vendor.name,
+            email: action.payload.vendor.email,
+          },
+          user: undefined,
+        };
+      }
+      return state;
     default:
       return state;
   }
@@ -76,6 +115,7 @@ export const useAuth = () => useContext(AuthContext);
 const initialState: AuthState = {
   user: undefined,
   authenticated: false,
+  vendor: undefined,
 };
 
 export default function AuthProvider({
@@ -83,38 +123,51 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const {
-    data: userData,
-    error: userError,
-    isLoading: userLoading,
-    refetch: userRefetch,
-  } = useQuery<TReturnData<TUser>, AxiosError<TReturnError>>({
-    queryKey: ["me"],
-    queryFn: () => UserGet(),
-    enabled: false,
+  const [user, vendor] = useQueries({
+    queries: [
+      {
+        queryKey: ["user-me"],
+        queryFn: () => UserGet(),
+        enabled: false,
+      },
+      {
+        queryKey: ["vendor-me"],
+        queryFn: () => VendorGet(),
+        enabled: false,
+      },
+    ],
   });
 
   const [authState, dispatch] = useReducer(authReducer, initialState);
   const value = { authState, dispatch };
   useEffect(() => {
-    userRefetch();
+    user.refetch();
+    vendor.refetch();
   }, []);
 
   useEffect(() => {
-    if (userData) {
-      dispatch({ type: "setMe", payload: userData.data });
+    if (user.data) {
+      dispatch({
+        type: "setMe",
+        payload: { user: user.data.data, vendor: undefined },
+      });
     }
-  }, [userData]);
+  }, [user.data]);
 
   useEffect(() => {
-    if (userError) {
-      dispatch({ type: "logout" });
+    if (vendor.data) {
+      console.log("VENDOR DATA");
+      dispatch({
+        type: "setMe",
+        payload: { vendor: vendor.data.data, user: undefined },
+      });
     }
-  }, [userError]);
+  }, [vendor.data]);
 
   return (
     <AuthContext.Provider value={value}>
-      {userLoading ? <CustomLoader /> : children}
+      {user.isLoading || vendor.isLoading ? <CustomLoader /> : children}
+      {/* {children} */}
     </AuthContext.Provider>
   );
 }

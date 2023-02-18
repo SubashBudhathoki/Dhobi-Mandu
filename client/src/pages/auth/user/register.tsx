@@ -1,14 +1,14 @@
-import PageHeader from "../../partials/PageHeader";
+import PageHeader from "../../../partials/PageHeader";
 import { PasswordInput, TextInput, Button } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-import ALink from "../../components/common/ALink";
-import RegisterSchema from "../../models/auth/register";
+import ALink from "../../../components/common/ALink";
+import RegisterSchema from "../../../models/auth/register";
 import { useMutation } from "@tanstack/react-query";
-import { TReturnData, TReturnError, UserRegister } from "../../api/api";
-import { useAuth } from "../../context/authContext";
+import { TReturnData, TReturnError, UserRegister } from "../../../api/api";
+import { useAuth } from "../../../context/authContext";
 import { Navigate } from "react-router-dom";
-import { TUser } from "../../utils/types";
-import ServerError from "../../components/common/ServerError";
+import { TUser } from "../../../utils/types";
+import ServerError from "../../../components/common/ServerError";
 import { AxiosError } from "axios";
 
 export default function Register() {
@@ -42,8 +42,6 @@ export default function Register() {
     return <Navigate to="/" />;
   } else if (registerSuccess === true) {
     return <Navigate to="/login" />;
-  } else if (registerError) {
-    console.log(registerError);
   }
 
   return (
