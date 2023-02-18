@@ -64,6 +64,11 @@ export default {
         maxAge: 1,
         expires: moment().add(1, "millisecond").toDate(),
       });
+      res.cookie("X-ACCESS-TOKEN-VENDOR", "", {
+        httpOnly: true,
+        maxAge: 1,
+        expires: moment().add(1, "millisecond").toDate(),
+      });
 
       return res.status(201).json({
         success: true,

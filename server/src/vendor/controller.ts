@@ -57,18 +57,22 @@ export default {
       return res.status(handleError.status).json(handleError);
     }
   },
-  logout: function (req: Request, res: Response) {
+
+  me: async function (req: Request, res: Response) {
     try {
-      res.cookie("X-ACCESS-TOKEN-VENDOR", "", {
-        httpOnly: true,
-        maxAge: 1,
-        expires: moment().add(1, "millisecond").toDate(),
-      });
+      const vendorId = req.vendorId;
+      const vendor = await VendorService.getById(vendorId);
+      if (!vendor || vendor.id !== vendorId)
+        return res.status(404).json({
+          success: false,
+          data: {},
+          message: "Vendor not found",
+        });
 
       return res.status(201).json({
         success: true,
-        data: {},
-        message: "Logout Successful",
+        data: vendor,
+        message: "My Data",
       });
     } catch (error) {
       const handleError = ErrorHandle.handleError(error);

@@ -17,10 +17,11 @@
   "scripts": {
     "dev": "concurrently \"yarn watch-compile\" \"yarn watch-dev\"",
     "watch-compile": "swc src -w --out-dir dist",
-    "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
+    "watch-dev": "NODE_ENV=dev nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
     "build": "swc src -d dist",
     "start": "NODE_ENV=production node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "migrate": "yarn prisma migrate dev"
   },
   "dependencies": {
     "@prisma/client": "4.10.1",

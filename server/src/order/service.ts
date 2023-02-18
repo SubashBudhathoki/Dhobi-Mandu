@@ -8,6 +8,7 @@ export default {
   getAllOrders: async function () {
     return await prisma.order.findMany({
       include: {
+        user: true,
         OrderItems: {
           include: {
             Service: true,
@@ -32,6 +33,7 @@ export default {
   },
   changeOrderState: async function (id: number, state: { state: ORDER_STATE }) {
     ValidateOrderState(state);
+    console.log("CHANGE ORDER STATE");
     return await prisma.order.update({
       where: {
         id: id,
@@ -65,13 +67,12 @@ export default {
   },
   create: async function (orderItems: OrderItem[], userId: number) {
     // Throws error if order is invalid
-    // await ValidateOrderItems(orderItems);
+    await ValidateOrderItems(orderItems);
 
-    // for each order item, get the Service and calculate the total
     let orderTotal = 0;
     for (let orderIdx in orderItems) {
       const order = orderItems[orderIdx];
-      const Service = (await prisma.Service.findUnique({
+      const Service = (await prisma.service.findUnique({
         where: {
           id: order.serviceId,
         },
