@@ -11,6 +11,21 @@ const UserSchema = z.object({
   name: z.string().min(3, {
     message: "Name must be at least 3 characters long",
   }),
+  address: z.string().min(3, {
+    message: "Address must be at least 3 characters long",
+  }),
+});
+
+const UserUpdateSchema = z.object({
+  email: z.string().email({
+    message: "Email must be a valid email address",
+  }),
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters long",
+  }),
+  address: z.string().min(3, {
+    message: "Address must be at least 3 characters long",
+  }),
 });
 
 const UserLoginSchema = z.object({
@@ -43,7 +58,9 @@ const UserLoginSchema = z.object({
 export function ValidateRegister(data: User) {
   return UserSchema.parse(data);
 }
-
+export function ValidateUpdate(data: User) {
+  return UserUpdateSchema.parse(data);
+}
 export function ValidateLogin(data: { email: string; password: string }) {
   return UserLoginSchema.parse(data);
 }

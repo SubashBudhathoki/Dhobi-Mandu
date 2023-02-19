@@ -16,6 +16,7 @@ model User {
   email        String         @unique
   password     String
   Order        Order[]
+  address      String         @default("")
   RefreshToken RefreshToken[]
 }
 
@@ -24,6 +25,7 @@ model Vendor {
   name     String    @unique
   email    String    @unique
   password String
+  address  String    @default("")
   Services Service[]
 }
 

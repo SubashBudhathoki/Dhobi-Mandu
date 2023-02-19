@@ -11,6 +11,8 @@ import { Navigate, redirect } from "react-router";
 import { TUser } from "../../../utils/types";
 import { useAuth } from "../../../context/authContext";
 import { useEffect } from "react";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
 
 export default function Login() {
   const form = useForm({
@@ -25,6 +27,7 @@ export default function Login() {
   const {
     data,
     isLoading,
+    isSuccess,
     error,
     mutate: fetchLogin,
   } = useMutation<
@@ -42,6 +45,33 @@ export default function Login() {
         password: form.values.password,
       }),
   });
+
+  if (isLoading) {
+    showNotification({
+      id: "login-notification",
+      message: "Logging You in",
+      title: "Loading",
+      loading: true,
+    });
+  }
+  if (error) {
+    updateNotification({
+      id: "login-notification",
+      message: "Error While Logging in",
+      title: "Error",
+      icon: <X />,
+      color: "red",
+    });
+  }
+  if (isSuccess) {
+    updateNotification({
+      id: "login-notification",
+      message: "Logged in successfully",
+      title: "Success",
+      icon: <Check />,
+      color: "green",
+    });
+  }
 
   useEffect(() => {
     if (data) {

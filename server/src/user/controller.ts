@@ -102,4 +102,26 @@ export default {
       return res.status(handleError.status).json(handleError);
     }
   },
+  update: async function (req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const data = req.body;
+      const user = await UserService.update(userId, data);
+      if (!user || user.id !== userId)
+        return res.status(404).json({
+          success: false,
+          data: {},
+          message: "User not found",
+        });
+
+      return res.status(201).json({
+        success: true,
+        data: user,
+        message: "My Data",
+      });
+    } catch (error) {
+      const handleError = ErrorHandle.handleError(error);
+      return res.status(handleError.status).json(handleError);
+    }
+  },
 };

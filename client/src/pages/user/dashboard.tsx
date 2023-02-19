@@ -64,72 +64,76 @@ function OrdersTab() {
       {orderError && <div>error</div>}
       {orderData && (
         <Flex direction="column-reverse" gap="md">
-          {orderData.data.map((order) => (
-            <Paper
-              withBorder
-              style={{
-                width: "100%",
-                position: "relative",
-              }}
-              shadow="sm"
-              radius="md"
-              p="md"
-              key={order.id}
-            >
-              <Flex gap="sm" mb="sm">
-                <Badge>Order ID: {order.id}</Badge>
-                <Badge>Total: NRS {order.total}</Badge>
-              </Flex>
+          {orderData.data.length <= 0 && (
+            <div>You don{"'"}t have any orders yet </div>
+          )}
+          {orderData.data.length > 0 &&
+            orderData.data.map((order) => (
+              <Paper
+                withBorder
+                style={{
+                  width: "100%",
+                  position: "relative",
+                }}
+                shadow="sm"
+                radius="md"
+                p="md"
+                key={order.id}
+              >
+                <Flex gap="sm" mb="sm">
+                  <Badge>Order ID: {order.id}</Badge>
+                  <Badge>Total: NRS {order.total}</Badge>
+                </Flex>
 
-              <Flex justify="space-between" align="start">
-                <div className="border w-75">
-                  <ScrollArea.Autosize offsetScrollbars maxHeight={200}>
-                    <Table
-                      border={0}
+                <Flex justify="space-between" align="start">
+                  <div className="border w-75">
+                    <ScrollArea.Autosize offsetScrollbars maxHeight={200}>
+                      <Table
+                        border={0}
+                        style={{
+                          border: "0px",
+                        }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Service</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {order.OrderItems.map((item) => (
+                            <tr key={item.id}>
+                              <td>{item.Service.name}</td>
+                              <td>{item.quantity}</td>
+                              <td>{item.Service.price}</td>
+                              <td>{item.total}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </ScrollArea.Autosize>
+                  </div>
+                  <OrderStatusTimeLine
+                    active={ORDER_STATES.findIndex(
+                      (state) => state === order.state
+                    )}
+                  />
+                </Flex>
+                {order.state === "CANCELLED" && (
+                  <Overlay color="red">
+                    <Center
                       style={{
-                        border: "0px",
+                        height: "100%",
                       }}
                     >
-                      <thead>
-                        <tr>
-                          <th>Service</th>
-                          <th>Quantity</th>
-                          <th>Price</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {order.OrderItems.map((item) => (
-                          <tr key={item.id}>
-                            <td>{item.Service.name}</td>
-                            <td>{item.quantity}</td>
-                            <td>{item.Service.price}</td>
-                            <td>{item.total}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </ScrollArea.Autosize>
-                </div>
-                <OrderStatusTimeLine
-                  active={ORDER_STATES.findIndex(
-                    (state) => state === order.state
-                  )}
-                />
-              </Flex>
-              {order.state === "CANCELLED" && (
-                <Overlay color="red">
-                  <Center
-                    style={{
-                      height: "100%",
-                    }}
-                  >
-                    <h2 className="text-white">Cancelled</h2>
-                  </Center>
-                </Overlay>
-              )}
-            </Paper>
-          ))}
+                      <h2 className="text-white">Cancelled</h2>
+                    </Center>
+                  </Overlay>
+                )}
+              </Paper>
+            ))}
         </Flex>
       )}
     </div>

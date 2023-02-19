@@ -12,7 +12,8 @@ import {
 import ServiceValidation from "../../../models/service/service";
 import { TSingleService } from "../../../utils/types";
 import ServerError from "../../common/ServerError";
-
+import { updateNotification, showNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
 type TProp =
   | {
       type: "create";
@@ -60,6 +61,35 @@ export default function ServiceForm(
             image: form.values.image,
           }),
   });
+
+  if (serviceMutateLoading) {
+    showNotification({
+      id: `${props.type}-service-notification`,
+      message: `${props.type === "create" ? "Creation" : "Update"} in progress`,
+      title: "Loading",
+      loading: true,
+    });
+  }
+  if (serviceMutateError) {
+    updateNotification({
+      id: `${props.type}-service-notification`,
+      message: `Error while service ${
+        props.type === "create" ? "creation" : "updating"
+      }`,
+      title: "Error",
+      icon: <X />,
+      color: "red",
+    });
+  }
+  if (serviceMutateSuccess) {
+    updateNotification({
+      id: `${props.type}-service-notification`,
+      message: `${props.type === "create" ? "Creation" : "Update"} Successful`,
+      title: "Success",
+      icon: <Check />,
+      color: "green",
+    });
+  }
 
   useEffect(() => {
     if (serviceMutateSuccess) {

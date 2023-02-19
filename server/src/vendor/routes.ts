@@ -10,6 +10,7 @@ router.post("/register", VC.register);
 router.delete("/logout", UC.logout);
 
 router.get("/me", Middleware.isLoggedIn, VC.me);
+router.patch("/update", Middleware.isLoggedIn, VC.update);
 router.get("/orders", Middleware.isLoggedIn, OC.getAllOrders);
 
 export default router;

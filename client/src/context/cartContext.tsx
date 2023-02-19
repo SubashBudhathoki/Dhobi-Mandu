@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { TCart, TCartItem } from "../utils/types";
-
+import { showNotification } from "@mantine/notifications";
 type CartAction =
   | {
       type: "addToCart";
@@ -33,12 +33,20 @@ type TCartState = {
 type CartContextType = {
   cart: TCartState;
   dispatch: React.Dispatch<CartAction>;
+  addToCart: (cartItem: Omit<TCartItem, "id">) => void;
+  removeFromCart: (itemId: number) => void;
+  clearCart: () => void;
+  updateCartItemQty: (itemId: number, type: "INC" | "DEC") => void;
 };
 const CartContext = createContext<CartContextType>({
   cart: {
     items: [],
     total: 0,
   },
+  addToCart: (item: Omit<TCartItem, "id">) => {},
+  removeFromCart: (itemId: number) => {},
+  clearCart: () => {},
+  updateCartItemQty: (itemId: number, type: "INC" | "DEC") => {},
   dispatch: () => {},
 });
 
@@ -52,7 +60,6 @@ function authReducer(state: TCartState, action: CartAction): TCartState {
   }
   switch (action.type) {
     case "addToCart":
-      // find a cart item with same serviceId. If present. update that cartItem by updating its uantity to +1
       const existingItemIdx = state.items.findIndex((cartItem) => {
         return cartItem.service.id === action.payload.service.id;
       });
@@ -183,13 +190,49 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [cart, dispatch] = useReducer(authReducer, initialState);
-  const value = { cart, dispatch };
+
+  function addToCart(cartItem: Omit<TCartItem, "id">) {
+    showNotification({
+      message: " Item added to cart",
+      title: "Success",
+    });
+    dispatch({ type: "addToCart", payload: cartItem });
+  }
+  function removeFromCart(itemId: number) {
+    showNotification({
+      message: "Item removed from cart",
+      title: "Success",
+    });
+    dispatch({ type: "removeFromCart", payload: { itemId } });
+  }
+  function clearCart() {
+    showNotification({
+      message: "Cart Cleared",
+      title: "Success",
+    });
+    dispatch({ type: "clearCart" });
+  }
+  function updateCartItemQty(itemId: number, type: "INC" | "DEC") {
+    dispatch({ type: "changeQty", payload: { itemId, type } });
+  }
+  function setCart(cartState: TCartState) {
+    dispatch({ type: "setCart", payload: cartState });
+  }
+
+  const value = {
+    cart,
+    dispatch,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    updateCartItemQty,
+  };
 
   useEffect(() => {
     const cartFromLocalStorage = localStorage.getItem("cart");
     if (cartFromLocalStorage) {
       const cart: TCartState = JSON.parse(cartFromLocalStorage);
-      dispatch({ type: "setCart", payload: cart });
+      setCart(cart);
     }
   }, []);
 

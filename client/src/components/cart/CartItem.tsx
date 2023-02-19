@@ -36,7 +36,7 @@ interface UserInfoIconsProps {
 
 export default function CartItem({ cartItem }: { cartItem: TCartItem }) {
   const { classes } = useStyles();
-  const { dispatch } = useCart();
+  const { removeFromCart, updateCartItemQty } = useCart();
   return (
     <Paper shadow="lg" p="lg" withBorder radius="md">
       <Flex justify="space-between">
@@ -63,13 +63,7 @@ export default function CartItem({ cartItem }: { cartItem: TCartItem }) {
                     <Tooltip label="Increase Quantity">
                       <ActionIcon
                         onClick={() =>
-                          dispatch({
-                            type: "changeQty",
-                            payload: {
-                              itemId: cartItem.service.id,
-                              type: "INC",
-                            },
-                          })
+                          updateCartItemQty(cartItem.service.id, "INC")
                         }
                         size="sm"
                         variant="outline"
@@ -81,13 +75,7 @@ export default function CartItem({ cartItem }: { cartItem: TCartItem }) {
                     <Tooltip label="Decrease Quantity">
                       <ActionIcon
                         onClick={() =>
-                          dispatch({
-                            type: "changeQty",
-                            payload: {
-                              itemId: cartItem.service.id,
-                              type: "DEC",
-                            },
-                          })
+                          updateCartItemQty(cartItem.service.id, "DEC")
                         }
                         size="sm"
                         variant="outline"
@@ -112,12 +100,7 @@ export default function CartItem({ cartItem }: { cartItem: TCartItem }) {
           color={"red"}
           variant="light"
           onClick={() => {
-            dispatch({
-              type: "removeFromCart",
-              payload: {
-                itemId: cartItem.service.id,
-              },
-            });
+            removeFromCart(cartItem.service.id);
           }}
         >
           <Trash size={20} />

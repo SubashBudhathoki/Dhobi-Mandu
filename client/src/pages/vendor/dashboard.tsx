@@ -11,11 +11,9 @@ import {
   ScrollArea,
   Tooltip,
   ActionIcon,
-  Indicator,
-  Box,
+  Text,
   Overlay,
   Center,
-  TextInput,
   Button,
 } from "@mantine/core";
 
@@ -49,7 +47,7 @@ function dashboard() {
         title={authState.vendor ? "Hello " + authState.vendor?.name : ""}
       />
       <div className="container">
-        <Tabs defaultValue="acc_info" title="My Account" orientation="vertical">
+        <Tabs defaultValue="orders" title="My Account" orientation="vertical">
           <Tabs.List>
             <Tabs.Tab value="orders">Orders</Tabs.Tab>
             <Tabs.Tab value="services">Services</Tabs.Tab>
@@ -228,11 +226,13 @@ function OrderStatusTimeLine({
           title={
             <Tooltip label={"Update to " + state}>
               <Badge
+                component={BadgeButton}
                 style={{
                   cursor: "pointer",
                 }}
+                color="blue"
               >
-                {state}
+                <Text>{state}</Text>
               </Badge>
             </Tooltip>
           }
@@ -248,4 +248,14 @@ function OrderStatusTimeLine({
   );
 }
 
+const BadgeButton = ({
+  children,
+  ...others
+}: {
+  children: React.ReactNode;
+}) => (
+  <Button {...others} variant="light" color="gray">
+    {children}
+  </Button>
+);
 export default WithAuth(dashboard, "VENDOR");

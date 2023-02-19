@@ -51,7 +51,7 @@ export default function SingleService() {
 }
 
 function DisplayService({ service }: { service: TSingleService }) {
-  const { dispatch } = useCart();
+  const { dispatch, addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const { authState } = useAuth();
   return (
@@ -93,13 +93,10 @@ function DisplayService({ service }: { service: TSingleService }) {
                     <div className="d-flex align-items-center">
                       <Button
                         onClick={() => {
-                          dispatch({
-                            type: "addToCart",
-                            payload: {
-                              quantity: qty,
-                              service: service,
-                              total: service.price * qty,
-                            },
+                          addToCart({
+                            quantity: qty,
+                            service: service,
+                            total: service.price * qty,
                           });
                         }}
                         variant="light"

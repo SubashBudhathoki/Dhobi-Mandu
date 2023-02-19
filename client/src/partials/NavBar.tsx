@@ -6,7 +6,8 @@ import { useMutation } from "@tanstack/react-query";
 import { TReturnData, TReturnError, UserLogout } from "../api/api";
 import { AxiosError } from "axios";
 import { Text } from "@mantine/core";
-import { Navigate } from "react-router-dom";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
 export default function NavBar() {
   const { authState, dispatch } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -19,6 +20,34 @@ export default function NavBar() {
   } = useMutation<TReturnData<{}>, AxiosError<TReturnError>>({
     mutationFn: () => UserLogout(),
   });
+
+  if (logoutLoading) {
+    showNotification({
+      id: "logout-notification",
+      title: "Loading",
+      message: "Logging you Out",
+      loading: true,
+    });
+  }
+  if (logoutError) {
+    updateNotification({
+      id: "logout-notification",
+      title: "Error",
+      message: "Error Logging you Out",
+      icon: <X />,
+      color: "red",
+    });
+  }
+  if (logoutSuccess) {
+    updateNotification({
+      id: "logout-notification",
+      title: "Success",
+      message: "Logged you Out",
+      icon: <Check />,
+      color: "green",
+    });
+  }
+
   useEffect(() => {
     if (logoutSuccess) dispatch({ type: "logout" });
   }, [logoutSuccess]);
@@ -96,7 +125,6 @@ export default function NavBar() {
                         Cart
                       </p>
                     )}
-                    {/* <p className="nav-item nav-link"> | </p> */}
                     <Text
                       color="dimmed"
                       role="button"

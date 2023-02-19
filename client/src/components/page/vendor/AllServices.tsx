@@ -17,9 +17,10 @@ import {
   Modal,
   Flex,
 } from "@mantine/core";
-import { Pencil, Trash } from "tabler-icons-react";
+import { Check, Pencil, Trash, X } from "tabler-icons-react";
 import { useEffect, useState } from "react";
 import ServiceForm from "./ServiceForm";
+import { showNotification, updateNotification } from "@mantine/notifications";
 export default function AllServices() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
@@ -54,13 +55,42 @@ export default function AllServices() {
     setRefreshData((p) => !p);
   }
 
+  if (serviceDeleteLoading) {
+    showNotification({
+      id: "delete-service-notification",
+      title: "Loading",
+      message: "Deletion in progress",
+      loading: true,
+    });
+  }
+  if (serviceDeleteError) {
+    updateNotification({
+      id: "delete-service-notification",
+      title: "Error",
+      message: "Error while deleting service",
+      icon: <X />,
+      color: "red",
+    });
+  }
+  if (serviceDeleteSuccess) {
+    updateNotification({
+      id: "delete-service-notification",
+      title: "Success",
+      message: "Service deleted successfully",
+      icon: <Check />,
+      color: "green",
+    });
+  }
+
   useEffect(() => {
     serviceRefetch();
   }, [refreshData]);
 
   useEffect(() => {
-    handleRefresh();
-    setDeleteModalOpen(false);
+    if (serviceDeleteSuccess) {
+      handleRefresh();
+      setDeleteModalOpen(false);
+    }
   }, [serviceDeleteSuccess]);
 
   return (

@@ -82,7 +82,7 @@ export default function Services({
 }
 
 function SingleServiceCart({ service }: { service: TSingleService }) {
-  const { dispatch } = useCart();
+  const { dispatch, addToCart } = useCart();
   const { authState } = useAuth();
   return (
     <Card
@@ -117,13 +117,10 @@ function SingleServiceCart({ service }: { service: TSingleService }) {
           authState.user !== undefined && (
             <Button
               onClick={() => {
-                dispatch({
-                  type: "addToCart",
-                  payload: {
-                    quantity: 1,
-                    service: service,
-                    total: 1 * service.price,
-                  },
+                addToCart({
+                  quantity: 1,
+                  service: service,
+                  total: 1 * service.price,
                 });
               }}
               variant="light"

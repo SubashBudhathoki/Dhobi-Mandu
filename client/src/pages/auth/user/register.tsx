@@ -10,8 +10,24 @@ import { Navigate } from "react-router-dom";
 import { TUser } from "../../../utils/types";
 import ServerError from "../../../components/common/ServerError";
 import { AxiosError } from "axios";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { useRef } from "react";
 
 export default function Register() {
+  const { isLoaded: mapIsLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API_KEY,
+    libraries: ["places", "visualization"],
+  });
+
+  if (mapIsLoaded) {
+    return <DisplayForm />;
+  }
+  return <div>Loading</div>;
+}
+
+function DisplayForm() {
   const form = useForm({
     initialValues: {
       name: "",
@@ -36,8 +52,38 @@ export default function Register() {
         email: form.values.email,
         name: form.values.name,
         password: form.values.password,
+        address: form.values.address,
       }),
   });
+
+  if (registerLoading) {
+    showNotification({
+      id: "register-notification",
+      message: "Registration in progress",
+      title: "Loading",
+      loading: true,
+    });
+  }
+  if (registerError) {
+    updateNotification({
+      id: "register-notification",
+      message: "Error While registration",
+      title: "Error",
+      icon: <X />,
+      color: "red",
+    });
+  }
+  if (registerSuccess) {
+    updateNotification({
+      id: "register-notification",
+      message: "Registration successful",
+      title: "Success",
+      icon: <Check />,
+      color: "green",
+    });
+  }
+
+  const googleAddressRef = useRef<HTMLInputElement>(null);
 
   if (authState.authenticated === true) {
     return <Navigate to="/" />;
@@ -74,7 +120,10 @@ export default function Register() {
             </div>
             <form
               onClick={form.onSubmit((values) => {
-                mutateRegister();
+                if (googleAddressRef.current) {
+                  form.values.address = googleAddressRef.current.value;
+                  mutateRegister();
+                }
               })}
             >
               <div className="form-outline mb-4">
@@ -93,11 +142,22 @@ export default function Register() {
                 />
               </div>
               <div className="form-outline mb-4">
-                <TextInput
-                  label="Address"
-                  placeholder="Enter your Address"
-                  {...form.getInputProps("address")}
-                />
+                <Autocomplete>
+                  <TextInput
+                    autoComplete="false"
+                    label="Address"
+                    placeholder="Enter your Address"
+                    ref={googleAddressRef}
+                    onChange={() => {
+                      if (googleAddressRef.current) {
+                        form.setFieldValue(
+                          "address",
+                          googleAddressRef.current.value
+                        );
+                      }
+                    }}
+                  />
+                </Autocomplete>
               </div>
               <div className="form-outline mb-4">
                 <PasswordInput

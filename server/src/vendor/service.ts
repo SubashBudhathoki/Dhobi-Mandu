@@ -3,7 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { compare, genSalt, hash } from "bcrypt";
 import { prisma } from "../index";
 import { RemoveKeyFromObj } from "../utils/helpers";
-import { ValidateLogin, ValidateRegister } from "./validation";
+import { ValidateLogin, ValidateRegister, ValidateUpdate } from "./validation";
 
 export default {
   getById: async function (id: number) {
@@ -41,7 +41,6 @@ export default {
   },
   create: async function (data: Vendor) {
     ValidateRegister(data);
-
     const vendorInDb = await prisma.vendor.findUnique({
       where: {
         email: data.email,
@@ -60,6 +59,8 @@ export default {
     });
   },
   update: async function (id: number, data: Vendor) {
+    ValidateUpdate(data);
+
     return await prisma.vendor.update({
       where: {
         id: id,

@@ -26,6 +26,7 @@ function isPrismaError(error: any) {
 
 export default {
   handleError: function (error: any) {
+    console.log(error);
     if (isPrismaError(error)) return this.handlePrismaError(error);
     else if (error instanceof ZodError) return this.handleZodError(error);
 
@@ -38,11 +39,28 @@ export default {
   },
 
   handlePrismaError: function (error: PrismaError) {
-    console.log(error.message);
+    let message = "";
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case "P2002":
+          message = "Entity Already Exists";
+          break;
+        case "P2003":
+          message = "Entity Does Not Exist";
+          break;
+        case "P2001":
+          message = "Invalid Credentials";
+          break;
+        default:
+          message = error.message;
+          break;
+      }
+    }
+
     return {
       success: false,
       data: error,
-      message: error.message,
+      message: message,
       status: 409,
     };
   },

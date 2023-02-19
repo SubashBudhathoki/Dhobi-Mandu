@@ -3,7 +3,7 @@ import { TextInput, Paper, Button } from "@mantine/core";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { useAuth } from "../../context/authContext";
 import { TUser } from "../../utils/types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   TReturnData,
@@ -13,6 +13,8 @@ import {
 } from "../../api/api";
 import { AxiosError } from "axios";
 import ServerError from "../../components/common/ServerError";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { Check, X } from "tabler-icons-react";
 export default function AccountInfoTab({
   entityType,
 }: {
@@ -52,6 +54,7 @@ function DisplayForm({
   const {
     isLoading: updateLoading,
     error: updateError,
+    isSuccess: updateSuccess,
     mutate: updateVendor,
     data: updateData,
   } = useMutation<TReturnData<TUser>, AxiosError<TReturnError>>({
@@ -69,6 +72,31 @@ function DisplayForm({
           }),
   });
   const googleAddressRef = useRef<HTMLInputElement>(null);
+  const [address, setAddress] = useState(entity.address);
+  if (updateLoading) {
+    showNotification({
+      id: "update-account-notification",
+      message: "Updating your account",
+      title: "Loading",
+      loading: true,
+    });
+  } else if (updateError) {
+    updateNotification({
+      id: "update-account-notification",
+      message: "Error updating account",
+      title: "Error",
+      icon: <X />,
+      color: "red",
+    });
+  } else if (updateSuccess) {
+    updateNotification({
+      id: "update-account-notification",
+      message: "Account updated successfully",
+      title: "Success",
+      icon: <Check />,
+      color: "green",
+    });
+  }
 
   useEffect(() => {
     if (updateData) {
@@ -93,9 +121,10 @@ function DisplayForm({
       )}
       <form
         onSubmit={form.onSubmit((values) => {
-          if (googleAddressRef.current)
+          if (googleAddressRef.current) {
             form.values.address = googleAddressRef.current.value;
-          updateVendor();
+            updateVendor();
+          }
         })}
       >
         <Paper p="xl" withBorder shadow="sm">
@@ -118,10 +147,29 @@ function DisplayForm({
           <div className="mt-3">
             <Autocomplete>
               <TextInput
+                autoComplete="false"
                 ref={googleAddressRef}
                 label="Address"
                 placeholder="Enter Your Address"
                 {...form.getInputProps("address")}
+                onBlur={() => {
+                  if (googleAddressRef.current) {
+                    form.setFieldValue(
+                      "address",
+                      googleAddressRef.current.value
+                    );
+                    setAddress(googleAddressRef.current.value);
+                  }
+                }}
+                onChange={() => {
+                  if (googleAddressRef.current) {
+                    form.setFieldValue(
+                      "address",
+                      googleAddressRef.current.value
+                    );
+                    setAddress(googleAddressRef.current.value);
+                  }
+                }}
               />
             </Autocomplete>
           </div>

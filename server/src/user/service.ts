@@ -2,7 +2,7 @@ import { compare, hash, genSalt } from "bcrypt";
 import { prisma } from "../index";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { User } from "@prisma/client";
-import { ValidateLogin, ValidateRegister } from "./validation";
+import { ValidateLogin, ValidateRegister, ValidateUpdate } from "./validation";
 import { RemoveKeyFromObj } from "../utils/helpers";
 export default {
   getById: async function (id: number) {
@@ -74,6 +74,7 @@ export default {
     return RemoveKeyFromObj(createdUser, "password");
   },
   update: async function (id: number, data: User) {
+    ValidateUpdate(data);
     return await prisma.user.update({
       where: {
         id: id,

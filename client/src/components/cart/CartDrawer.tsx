@@ -11,7 +11,7 @@ export default function CartDrawer({
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const theme = useMantineTheme();
-  const { cart, dispatch } = useCart();
+  const { cart, clearCart } = useCart();
 
   return (
     <Drawer
@@ -32,7 +32,7 @@ export default function CartDrawer({
             <ALink href="/checkout">
               <Button fullWidth>Proceed to Checkout</Button>
             </ALink>
-            <Button onClick={() => dispatch({ type: "clearCart" })} fullWidth>
+            <Button onClick={() => clearCart()} fullWidth>
               Clear Cart
             </Button>
           </Flex>

@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `address` VARCHAR(191) NOT NULL DEFAULT '';
+
+-- AlterTable
+ALTER TABLE `Vendor` ADD COLUMN `address` VARCHAR(191) NOT NULL DEFAULT '';

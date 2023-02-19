@@ -9,6 +9,9 @@ import { OrderCreate, TReturnData, TReturnError } from "../api/api";
 import { AxiosError } from "axios";
 import ServerError from "../components/common/ServerError";
 import { Navigate } from "react-router-dom";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { X, Check } from "tabler-icons-react";
+
 function Checkout() {
   const { cart, dispatch } = useCart();
 
@@ -30,8 +33,31 @@ function Checkout() {
     },
   });
 
+  if (orderLoading) {
+    showNotification({
+      id: "order-notification",
+      message: "Placing your Order",
+      title: "Loading",
+      loading: true,
+    });
+  }
+  if (orderError) {
+    updateNotification({
+      id: "order-notification",
+      message: "Error placing order",
+      title: "Error",
+      icon: <X />,
+    });
+  }
+
   if (orderSuccess) {
     dispatch({ type: "clearCart" });
+    updateNotification({
+      id: "order-notification",
+      message: "Order placed successfully",
+      title: "Success",
+      icon: <Check />,
+    });
     return <Navigate to="/dashboard" />;
   }
 
