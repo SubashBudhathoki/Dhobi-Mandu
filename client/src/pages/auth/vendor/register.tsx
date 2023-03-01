@@ -4,7 +4,7 @@ import { useForm, zodResolver } from "@mantine/form";
 import ALink from "../../../components/common/ALink";
 import RegisterSchema from "../../../models/auth/register";
 import { useMutation } from "@tanstack/react-query";
-import { TReturnData, TReturnError, UserRegister } from "../../../api/api";
+import { TReturnData, TReturnError, VendorRegister } from "../../../api/api";
 import { useAuth } from "../../../context/authContext";
 import { Navigate } from "react-router-dom";
 import { TUser } from "../../../utils/types";
@@ -51,7 +51,7 @@ function DisplayForm() {
     mutate: mutateRegister,
   } = useMutation<TReturnData<TUser>, AxiosError<TReturnError>>({
     mutationFn: () =>
-      UserRegister({
+      VendorRegister({
         email: form.values.email,
         name: form.values.name,
         password: form.values.password,
@@ -93,12 +93,12 @@ function DisplayForm() {
   if (authState.authenticated === true) {
     return <Navigate to="/" />;
   } else if (registerSuccess === true) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/vendor/login" />;
   }
 
   return (
     <>
-      <PageHeader title="Register" />
+      <PageHeader title="Vendor Register" />
       <div className="position-relative">
         <div
           className="d-flex justify-content-center align-items-center p-5 m-5 mx-auto position-relative"

@@ -48,7 +48,6 @@ export default {
   create: async function (req: Request, res: Response) {
     try {
       const vendorId = req.vendorId;
-
       const data = req.body;
       const savedService = await ServiceService.create({ ...data, vendorId });
       return res.status(201).json({

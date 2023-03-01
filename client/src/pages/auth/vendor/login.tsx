@@ -132,7 +132,7 @@ export default function Login() {
               </Button>
               <div className="text-center">
                 <p>
-                  Not a member? <ALink href="/register">Register</ALink>
+                  Not a member? <ALink href="/vendor/register">Register</ALink>
                 </p>
               </div>
             </form>

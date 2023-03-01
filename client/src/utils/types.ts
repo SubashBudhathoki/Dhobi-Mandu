@@ -12,6 +12,8 @@ export type TUser = {
   name: string;
   email: string;
   address: string;
+  address_latitude: number;
+  address_longitude: number;
 };
 
 export type TCartItem = {
@@ -34,20 +36,46 @@ export type TOrderRequest = Array<{
   quantity: number;
 }>;
 
-export type TOrderResponse = Array<{
+export type TSingleOrderItem = {
+  id: number;
+  serviceId: number;
+  quantity: number;
+  total: number;
+  orderId: number;
+  Service: TSingleService & {
+    vendorId: number;
+    vendor: TUser;
+  };
+};
+
+export type TSingleOrder = {
   id: number;
   userId: number;
   total: number;
   state: TORDER_STATE;
   user: TUser;
-  OrderItems: Array<{
-    id: number;
-    serviceId: number;
-    quantity: number;
-    total: number;
-    orderId: number;
-    Service: TSingleService & {
-      vendorId: number;
+  OrderItems: TSingleOrderItem[];
+};
+
+export type TOrderResponse = Array<TSingleOrder>;
+
+export type TMapGeoJSONType = {
+  type: "FeatureCollection";
+  features: Array<{
+    type: "Feature";
+    properties: {};
+    geometry: {
+      type:
+        | "Point"
+        | "LineString"
+        | "Polygon"
+        | "MultiPoint"
+        | "MultiLineString"
+        | "MultiPolygon"
+        | "GeometryCollection"
+        | "Feature"
+        | "FeatureCollection";
+      coordinates: Array<Array<Array<number>>>;
     };
   }>;
-}>;
+};

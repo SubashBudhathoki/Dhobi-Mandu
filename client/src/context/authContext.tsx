@@ -50,6 +50,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             name: action.payload.user.name,
             email: action.payload.user.email,
             address: action.payload.user.address,
+            address_latitude: action.payload.user.address_latitude,
+            address_longitude: action.payload.user.address_longitude,
           },
           vendor: undefined,
         };
@@ -61,6 +63,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             name: action.payload.vendor.name,
             email: action.payload.vendor.email,
             address: action.payload.vendor.address,
+            address_latitude: action.payload.vendor.address_latitude,
+            address_longitude: action.payload.vendor.address_longitude,
           },
           user: undefined,
         };
@@ -74,6 +78,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
           name: action.payload.name,
           email: action.payload.email,
           address: action.payload.address,
+          address_latitude: action.payload.address_latitude,
+          address_longitude: action.payload.address_longitude,
         },
       };
     case "logout":
@@ -92,6 +98,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             name: action.payload.user.name,
             email: action.payload.user.email,
             address: action.payload.user.address,
+            address_latitude: action.payload.user.address_latitude,
+            address_longitude: action.payload.user.address_longitude,
           },
           vendor: undefined,
         };
@@ -105,6 +113,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             name: action.payload.vendor.name,
             email: action.payload.vendor.email,
             address: action.payload.vendor.address,
+            address_latitude: action.payload.vendor.address_latitude,
+            address_longitude: action.payload.vendor.address_longitude,
           },
           user: undefined,
         };

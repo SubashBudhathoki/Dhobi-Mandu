@@ -1,5 +1,6 @@
 import WithAuth from "../../components/hoc/WithAuth";
 import { useAuth } from "../../context/authContext";
+import MapOSM, { LatLng } from "../../components/map/open-street/map";
 import PageHeader from "../../partials/PageHeader";
 import {
   Flex,
@@ -15,6 +16,7 @@ import {
   Overlay,
   Center,
   Button,
+  Modal,
 } from "@mantine/core";
 
 import {
@@ -32,7 +34,7 @@ import {
   TReturnData,
   TReturnError,
 } from "../../api/api";
-import { TOrderResponse, TORDER_STATE } from "../../utils/types";
+import { TOrderResponse, TORDER_STATE, TSingleOrder } from "../../utils/types";
 import { AxiosError } from "axios";
 import CustomLoader from "../../components/common/CustomLoader";
 import { ShoppingCartOff } from "tabler-icons-react";
@@ -73,6 +75,12 @@ const ORDER_STATES = ["RECEIVED", "WASHING", "SHIPPING", "COMPLETED"] as const;
 
 function OrdersTab() {
   const [refreshData, setRefreshData] = useState(false);
+  const { authState } = useAuth();
+
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+  const [activeOrder, setActiveOrder] = useState<TSingleOrder | null>(null);
+  const [mapLatLng, setMapLatLng] = useState<LatLng[]>([]);
+
   const {
     data: orderData,
     isLoading: orderLoading,
@@ -95,6 +103,10 @@ function OrdersTab() {
   function handleRefetchData(): void {
     setRefreshData((p) => !p);
   }
+
+  useEffect(() => {
+    if (activeOrder) setMapModalOpen(true);
+  }, [activeOrder]);
 
   useEffect(() => {
     orderRefetch();
@@ -126,6 +138,9 @@ function OrdersTab() {
                   <Badge>Order ID: {order.id}</Badge>
                   <Badge>Ordered By: {order.user.name}</Badge>
                   <Badge>Total: NRS {order.total}</Badge>
+                  <Button size="xs" onClick={() => setActiveOrder(order)}>
+                    View Map
+                  </Button>
                 </Flex>
                 <Tooltip label="Cancel Order">
                   <ActionIcon
@@ -189,6 +204,30 @@ function OrdersTab() {
             </Paper>
           ))}
         </Flex>
+      )}
+      {authState.vendor && activeOrder && (
+        <Modal
+          opened={mapModalOpen}
+          fullScreen
+          onClose={() => {
+            setMapModalOpen(false);
+            setActiveOrder(null);
+          }}
+          title="Route from User to Vendor"
+        >
+          <MapOSM
+            start={{
+              latitude: authState.vendor.address_latitude,
+              longitude: authState.vendor.address_longitude,
+            }}
+            end={[
+              {
+                latitude: activeOrder.user.address_latitude,
+                longitude: activeOrder.user.address_longitude,
+              },
+            ]}
+          />
+        </Modal>
       )}
     </div>
   );

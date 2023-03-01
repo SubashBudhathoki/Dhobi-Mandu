@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 
-if (process.env.NODE_ENV === "production") dotenv.config({ path: ".env.prod" });
-else dotenv.config({ path: ".env.dev" });
+// if (process.env.NODE_ENV === "production") dotenv.config({ path: ".env.prod" });
+// else dotenv.config({ path: ".env.dev" });
+
+dotenv.config();
 
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -12,6 +14,7 @@ import UserRoutes from "./user/routes";
 import VendorRoutes from "./vendor/routes";
 import ServiceRoutes from "./service/routes";
 import OrderRoutes from "./order/routes";
+import MapRoutes from "./map/routes";
 
 const app = express();
 
@@ -32,6 +35,7 @@ app.use("/user", UserRoutes);
 app.use("/vendor", VendorRoutes);
 app.use("/service", ServiceRoutes);
 app.use("/order", OrderRoutes);
+app.use("/map", MapRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

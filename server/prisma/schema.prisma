@@ -11,22 +11,26 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique
-  email        String         @unique
-  password     String
-  Order        Order[]
-  address      String         @default("")
-  RefreshToken RefreshToken[]
+  id                Int            @id @default(autoincrement())
+  name              String         @unique
+  email             String         @unique
+  password          String
+  Order             Order[]
+  address           String         @default("")
+  address_latitude  Float          @default(0)
+  address_longitude Float          @default(0)
+  RefreshToken      RefreshToken[]
 }
 
 model Vendor {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  email    String    @unique
-  password String
-  address  String    @default("")
-  Services Service[]
+  id                Int       @id @default(autoincrement())
+  name              String    @unique
+  email             String    @unique
+  password          String
+  address           String    @default("")
+  address_latitude  Float     @default(0)
+  address_longitude Float     @default(0)
+  Services          Service[]
 }
 
 model Service {

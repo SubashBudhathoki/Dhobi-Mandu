@@ -1,8 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+// import Map from "../components/map/open-street/map";
 import About from "../pages/about";
 import Login from "../pages/auth/user/login";
 import Register from "../pages/auth/user/register";
 import VendorLogin from "../pages/auth/vendor/login";
+import VendorRegister from "../pages/auth/vendor/register";
 import Checkout from "../pages/checkout";
 import Home from "../pages/home";
 import AllService from "../pages/services/AllService";
@@ -23,6 +25,8 @@ export default function Router() {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/vendor/dashboard" element={<VendorDashboard />} />
       <Route path="/vendor/login" element={<VendorLogin />} />
+      <Route path="/vendor/register" element={<VendorRegister />} />
+      {/* <Route path="/map-osm" element={<Map />} /> */}
     </Routes>
   );
 }

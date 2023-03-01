@@ -9,15 +9,19 @@ import {
   ScrollArea,
   Overlay,
   Center,
+  Button,
+  Modal,
 } from "@mantine/core";
 import WithAuth from "../../components/hoc/WithAuth";
 import { useAuth } from "../../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import { OrderUser, TReturnData, TReturnError } from "../../api/api";
-import { TOrderResponse } from "../../utils/types";
+import { TSingleOrder, TOrderResponse } from "../../utils/types";
 import { AxiosError } from "axios";
 import CustomLoader from "../../components/common/CustomLoader";
 import AccountInfoTab from "../vendor/AccountInfoTab";
+import { useEffect, useState } from "react";
+import MapOSM, { LatLng } from "../../components/map/open-street/map";
 
 const ORDER_STATES = ["RECEIVED", "WASHING", "SHIPPING", "COMPLETED"];
 
@@ -58,6 +62,36 @@ function OrdersTab() {
     queryFn: () => OrderUser(),
   });
 
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+  const [activeOrder, setActiveOrder] = useState<TSingleOrder | null>(null);
+  const [mapLatLng, setMapLatLng] = useState<LatLng[]>([]);
+  const { authState } = useAuth();
+
+  useEffect(() => {
+    if (activeOrder) {
+      const latLngMap = new Map<
+        string,
+        {
+          latitude: number;
+          longitude: number;
+        }
+      >();
+      activeOrder.OrderItems.forEach((item) => {
+        const key = `${item.Service.vendor.address_latitude}-${item.Service.vendor.address_longitude}`;
+        if (!latLngMap.has(key))
+          latLngMap.set(key, {
+            latitude: item.Service.vendor.address_latitude,
+            longitude: item.Service.vendor.address_longitude,
+          });
+      });
+      const vendorLatLngs = [...latLngMap.values()];
+      if (authState.user) {
+        setMapLatLng(vendorLatLngs);
+      }
+      setMapModalOpen(true);
+    }
+  }, [activeOrder]);
+
   return (
     <div>
       {orderLoading && <CustomLoader />}
@@ -80,9 +114,12 @@ function OrdersTab() {
                 p="md"
                 key={order.id}
               >
-                <Flex gap="sm" mb="sm">
+                <Flex gap="sm" mb="sm" align="center">
                   <Badge>Order ID: {order.id}</Badge>
                   <Badge>Total: NRS {order.total}</Badge>
+                  <Button size="xs" onClick={() => setActiveOrder(order)}>
+                    View Map
+                  </Button>
                 </Flex>
 
                 <Flex justify="space-between" align="start">
@@ -135,6 +172,25 @@ function OrdersTab() {
               </Paper>
             ))}
         </Flex>
+      )}
+      {authState.user && (
+        <Modal
+          opened={mapModalOpen}
+          fullScreen
+          onClose={() => {
+            setMapModalOpen(false);
+            setActiveOrder(null);
+          }}
+          title="Route from User to Vendor"
+        >
+          <MapOSM
+            start={{
+              latitude: authState.user.address_latitude,
+              longitude: authState.user.address_longitude,
+            }}
+            end={mapLatLng}
+          />
+        </Modal>
       )}
     </div>
   );

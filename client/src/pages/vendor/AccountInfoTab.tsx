@@ -1,5 +1,5 @@
 import { useForm } from "@mantine/form";
-import { TextInput, Paper, Button } from "@mantine/core";
+import { TextInput, Paper, Button, Flex } from "@mantine/core";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { useAuth } from "../../context/authContext";
 import { TUser } from "../../utils/types";
@@ -15,6 +15,7 @@ import { AxiosError } from "axios";
 import ServerError from "../../components/common/ServerError";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { Check, X } from "tabler-icons-react";
+import { KTM_BOUNDS } from "../../utils/constants";
 export default function AccountInfoTab({
   entityType,
 }: {
@@ -48,6 +49,8 @@ function DisplayForm({
       name: entity.name,
       email: entity.email,
       address: entity.address,
+      address_latitude: entity.address_latitude,
+      address_longitude: entity.address_longitude,
     },
   });
 
@@ -55,7 +58,7 @@ function DisplayForm({
     isLoading: updateLoading,
     error: updateError,
     isSuccess: updateSuccess,
-    mutate: updateVendor,
+    mutate: updateEntity,
     data: updateData,
   } = useMutation<TReturnData<TUser>, AxiosError<TReturnError>>({
     mutationFn: () =>
@@ -64,11 +67,15 @@ function DisplayForm({
             name: form.values.name,
             email: form.values.email,
             address: form.values.address,
+            address_latitude: form.values.address_latitude,
+            address_longitude: form.values.address_longitude,
           })
         : UserUpdate({
             name: form.values.name,
             email: form.values.email,
             address: form.values.address,
+            address_latitude: form.values.address_latitude,
+            address_longitude: form.values.address_longitude,
           }),
   });
   const googleAddressRef = useRef<HTMLInputElement>(null);
@@ -120,10 +127,18 @@ function DisplayForm({
         <ServerError message={updateError.response.data.message || ""} />
       )}
       <form
-        onSubmit={form.onSubmit((values) => {
+        onSubmit={form.onSubmit(async (values) => {
           if (googleAddressRef.current) {
             form.values.address = googleAddressRef.current.value;
-            updateVendor();
+            form.values.address = googleAddressRef.current.value;
+            const geoCoder = new google.maps.Geocoder();
+            const addressResult = await geoCoder.geocode({
+              address: googleAddressRef.current.value,
+            });
+            const addressLatLng = addressResult.results[0].geometry.location;
+            form.values.address_latitude = addressLatLng.lat();
+            form.values.address_longitude = addressLatLng.lng();
+            updateEntity();
           }
         })}
       >
@@ -145,7 +160,7 @@ function DisplayForm({
           </div>
 
           <div className="mt-3">
-            <Autocomplete>
+            <Autocomplete bounds={KTM_BOUNDS}>
               <TextInput
                 autoComplete="false"
                 ref={googleAddressRef}
@@ -173,6 +188,20 @@ function DisplayForm({
               />
             </Autocomplete>
           </div>
+          <Flex className="d-flex mt-3" gap="xl">
+            <TextInput
+              disabled
+              className="w-100"
+              label="Latitude"
+              {...form.getInputProps("address_latitude")}
+            />
+            <TextInput
+              disabled
+              className="w-100"
+              label="Longitude"
+              {...form.getInputProps("address_longitude")}
+            />
+          </Flex>
           <div className="mt-3">
             <Button loading={updateLoading} type="submit" fullWidth>
               Update Profile

@@ -1,3 +1,4 @@
+import { LatLng } from "../components/map/open-street/map";
 import {
   TAllService,
   TOrderRequest,
@@ -5,6 +6,7 @@ import {
   TORDER_STATE,
   TSingleService,
   TUser,
+  TMapGeoJSONType,
 } from "./../utils/types";
 // use tanstack-query
 const BASE_URL = import.meta.env.VITE_SERVER_URI || "http://localhost:3000";
@@ -54,12 +56,9 @@ export async function UserLogin(data: {
   return response.data;
 }
 
-export async function UserRegister(data: {
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-}): Promise<TReturnData<TUser>> {
+export async function UserRegister(
+  data: Omit<TUser & { password: string }, "id">
+): Promise<TReturnData<TUser>> {
   const response = await axiosInstance.post(`${BASE_URL}/user/register`, data, {
     withCredentials: true,
   });
@@ -194,12 +193,40 @@ export async function VendorLogin(data: {
   });
   return response.data;
 }
+export async function VendorRegister(
+  data: Omit<TUser & { password: string }, "id">
+): Promise<TReturnData<TUser>> {
+  const response = await axiosInstance.post(
+    `${BASE_URL}/vendor/register`,
+    data,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
 export async function VendorUpdate(
   data: Omit<TUser, "id">
 ): Promise<TReturnData<TUser>> {
   const response = await axiosInstance.patch(
     `${BASE_URL}/vendor/update`,
     data,
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+// astar
+export async function AstarGet(
+  start: LatLng,
+  end: LatLng
+): Promise<TReturnData<TMapGeoJSONType>> {
+  const response = await axiosInstance.post(
+    `${BASE_URL}/map/astar`,
+    { start, end },
     {
       withCredentials: true,
     }

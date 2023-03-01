@@ -11,7 +11,11 @@ export default {
         user: true,
         OrderItems: {
           include: {
-            Service: true,
+            Service: {
+              include: {
+                vendor: true,
+              },
+            },
           },
         },
       },
@@ -59,7 +63,11 @@ export default {
       include: {
         OrderItems: {
           include: {
-            Service: true,
+            Service: {
+              include: {
+                vendor: true,
+              },
+            },
           },
         },
       },
@@ -93,6 +101,7 @@ export default {
       data: {
         state: ORDER_STATE.RECEIVED,
         userId: order.userId,
+
         OrderItems: {
           create: order.OrderItems.map((item) => {
             return {

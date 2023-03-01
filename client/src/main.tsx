@@ -8,6 +8,8 @@ import CartProvider from "./context/cartContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NotificationsProvider } from "@mantine/notifications";
 import "./styles/style.min.css";
+import "./index.css";
+import "leaflet/dist/leaflet.css";
 
 const queryClient = new QueryClient();
 
