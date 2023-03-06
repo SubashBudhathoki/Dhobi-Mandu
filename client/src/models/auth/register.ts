@@ -17,6 +17,15 @@ const RegisterSchema = z
     confirmPassword: z.string().min(8, {
       message: "Password must be at least 8 characters long",
     }),
+    phone: z.string().superRefine((data, ctx) => {
+      if (isNaN(Number(data))) {
+        ctx.addIssue({
+          path: ["phone"],
+          message: "Phone must be a number",
+          code: "custom",
+        });
+      }
+    }),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {

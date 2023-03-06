@@ -51,6 +51,7 @@ function DisplayForm({
       address: entity.address,
       address_latitude: entity.address_latitude,
       address_longitude: entity.address_longitude,
+      phone: entity.phone,
     },
   });
 
@@ -69,6 +70,7 @@ function DisplayForm({
             address: form.values.address,
             address_latitude: form.values.address_latitude,
             address_longitude: form.values.address_longitude,
+            phone: form.values.phone,
           })
         : UserUpdate({
             name: form.values.name,
@@ -76,6 +78,7 @@ function DisplayForm({
             address: form.values.address,
             address_latitude: form.values.address_latitude,
             address_longitude: form.values.address_longitude,
+            phone: form.values.phone,
           }),
   });
   const googleAddressRef = useRef<HTMLInputElement>(null);
@@ -156,6 +159,13 @@ function DisplayForm({
               label="Email"
               placeholder="Enter Your Email"
               {...form.getInputProps("email")}
+            />
+          </div>
+          <div className="mt-3">
+            <TextInput
+              label="Phone Number"
+              placeholder="Enter your Phone Number"
+              {...form.getInputProps("phone")}
             />
           </div>
 

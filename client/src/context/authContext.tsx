@@ -52,6 +52,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             address: action.payload.user.address,
             address_latitude: action.payload.user.address_latitude,
             address_longitude: action.payload.user.address_longitude,
+            phone: action.payload.user.phone,
           },
           vendor: undefined,
         };
@@ -65,6 +66,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             address: action.payload.vendor.address,
             address_latitude: action.payload.vendor.address_latitude,
             address_longitude: action.payload.vendor.address_longitude,
+            phone: action.payload.vendor.phone,
           },
           user: undefined,
         };
@@ -80,6 +82,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
           address: action.payload.address,
           address_latitude: action.payload.address_latitude,
           address_longitude: action.payload.address_longitude,
+          phone: action.payload.phone,
         },
       };
     case "logout":
@@ -100,6 +103,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             address: action.payload.user.address,
             address_latitude: action.payload.user.address_latitude,
             address_longitude: action.payload.user.address_longitude,
+            phone: action.payload.user.phone,
           },
           vendor: undefined,
         };
@@ -115,6 +119,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
             address: action.payload.vendor.address,
             address_latitude: action.payload.vendor.address_latitude,
             address_longitude: action.payload.vendor.address_longitude,
+            phone: action.payload.vendor.phone,
           },
           user: undefined,
         };

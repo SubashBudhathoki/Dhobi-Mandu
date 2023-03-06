@@ -14,6 +14,7 @@ export type TUser = {
   address: string;
   address_latitude: number;
   address_longitude: number;
+  phone: string;
 };
 
 export type TCartItem = {
