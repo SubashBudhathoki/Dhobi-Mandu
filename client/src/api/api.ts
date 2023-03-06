@@ -59,9 +59,11 @@ export async function UserLogin(data: {
 export async function UserRegister(
   data: Omit<TUser & { password: string }, "id">
 ): Promise<TReturnData<TUser>> {
+  console.log(data);
   const response = await axiosInstance.post(`${BASE_URL}/user/register`, data, {
     withCredentials: true,
   });
+  console.log(response.data);
   return response.data;
 }
 

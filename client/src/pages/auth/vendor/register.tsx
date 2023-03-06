@@ -101,7 +101,12 @@ function DisplayForm() {
   return (
     <>
       <PageHeader title="Vendor Register" />
-      <div className="position-relative">
+      <div
+        className="position-relative"
+        style={{
+          marginBottom: "170px",
+        }}
+      >
         <div
           className="d-flex justify-content-center align-items-center p-5 m-5 mx-auto position-relative"
           style={{

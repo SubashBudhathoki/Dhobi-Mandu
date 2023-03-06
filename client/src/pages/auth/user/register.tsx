@@ -92,6 +92,8 @@ function DisplayForm() {
 
   const googleAddressRef = useRef<HTMLInputElement>(null);
 
+  console.log(form.errors)
+
   if (authState.authenticated === true) {
     return <Navigate to="/" />;
   } else if (registerSuccess === true) {
@@ -101,7 +103,12 @@ function DisplayForm() {
   return (
     <>
       <PageHeader title="Register" />
-      <div className="position-relative">
+      <div
+        className="position-relative"
+        style={{
+          marginBottom: "150px",
+        }}
+      >
         <div
           className="d-flex justify-content-center align-items-center p-5 m-5 mx-auto position-relative"
           style={{
@@ -138,6 +145,7 @@ function DisplayForm() {
 
                   form.values.address_latitude = addressLatLng.lat();
                   form.values.address_longitude = addressLatLng.lng();
+                  console.log(form.values)
                   mutateRegister();
                 }
               })}
