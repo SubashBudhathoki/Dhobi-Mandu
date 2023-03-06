@@ -137,6 +137,7 @@ function OrdersTab() {
                 <Flex gap="sm" align="center">
                   <Badge>Order ID: {order.id}</Badge>
                   <Badge>Ordered By: {order.user.name}</Badge>
+                  <Badge>Contact: {order.user.phone}</Badge>
                   <Badge>Total: NRS {order.total}</Badge>
                   <Button size="xs" onClick={() => setActiveOrder(order)}>
                     View Map

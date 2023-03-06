@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import { AstarGet, TReturnData, TReturnError } from "../../../api/api";
+import { useAuth } from "../../../context/authContext";
 import { TMapGeoJSONType } from "../../../utils/types";
-
+import L from "leaflet";
 export type LatLng = {
   latitude: number;
   longitude: number;
@@ -10,7 +12,12 @@ export type LatLng = {
 
 export default function Map({ start, end }: { start: LatLng; end: LatLng[] }) {
   // only take first end point
+
+  const { authState } = useAuth();
   const [endPoint] = end;
+
+  const [startMarker, setStartMarker] = useState("/icons/user-icon.svg");
+  const [endMarker, setEndMarker] = useState("/icons/vendor-icon.svg");
 
   const { isSuccess, isLoading, isError, data } = useQuery<
     TReturnData<TMapGeoJSONType>,
@@ -22,20 +29,15 @@ export default function Map({ start, end }: { start: LatLng; end: LatLng[] }) {
     queryFn: () => AstarGet(start, endPoint),
   });
 
-  if (data) {
-    let x: any = data;
-    const allPathLen = x.features[0].geometry.coordinates.length;
-    const lastPathArrLen =
-      x.features[0].geometry.coordinates[allPathLen - 1].length;
-    console.log(
-      x.features[0].geometry.coordinates[0][0][1],
-      x.features[0].geometry.coordinates[0][0][0]
-    );
-    console.log(
-      x.features[0].geometry.coordinates[allPathLen - 1][lastPathArrLen - 1][1],
-      x.features[0].geometry.coordinates[allPathLen - 1][lastPathArrLen - 1][0]
-    );
-  }
+  useEffect(() => {
+    if (authState.user) {
+      setStartMarker("/icons/user-icon.svg");
+      setEndMarker("/icons/vendor-icon.svg");
+    } else if (authState.vendor) {
+      setStartMarker("/icons/vendor-icon.svg");
+      setEndMarker("/icons/user-icon.svg");
+    }
+  }, []);
 
   return (
     <div className="container">
@@ -43,20 +45,35 @@ export default function Map({ start, end }: { start: LatLng; end: LatLng[] }) {
         <div>Loading...</div>
       ) : data ? (
         <MapContainer
-          center={[27.7054344, 85.3198591]}
-          zoom={13}
-          scrollWheelZoom={false}
+          className=""
+          center={[endPoint.latitude, endPoint.longitude]}
+          zoom={12}
+          scrollWheelZoom={true}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {/* <Marker
-            position={[
-              endPoint.longitude, //
-              endPoint.latitude,
-            ]}
-          /> */}
+          <Marker
+            icon={
+              new L.Icon({
+                iconUrl: startMarker,
+                iconSize: [25, 25],
+              })
+            }
+            autoPan={true}
+            position={[start.latitude, start.longitude]}
+          />
+          <Marker
+            icon={
+              new L.Icon({
+                iconUrl: endMarker,
+                iconSize: [25, 25],
+              })
+            }
+            position={[endPoint.latitude, endPoint.longitude]}
+          />
+
           <GeoJSON
             data={data as any}
             pathOptions={{

@@ -7,3 +7,11 @@ body {
   height: 80vh;
   width: 100%;
 }
+
+.user-icon-color {
+  filter: hue-rotate(120deg);
+}
+
+.vendor-icon-color {
+  filter: hue-rotate(-120deg);
+}
