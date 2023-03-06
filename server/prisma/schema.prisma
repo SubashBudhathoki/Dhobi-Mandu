@@ -15,6 +15,7 @@ model User {
   name              String         @unique
   email             String         @unique
   password          String
+  phone             String         @unique @default("")
   Order             Order[]
   address           String         @default("")
   address_latitude  Float          @default(0)
@@ -26,6 +27,7 @@ model Vendor {
   id                Int       @id @default(autoincrement())
   name              String    @unique
   email             String    @unique
+  phone             String    @unique @default("")
   password          String
   address           String    @default("")
   address_latitude  Float     @default(0)

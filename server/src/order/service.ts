@@ -37,7 +37,6 @@ export default {
   },
   changeOrderState: async function (id: number, state: { state: ORDER_STATE }) {
     ValidateOrderState(state);
-    console.log("CHANGE ORDER STATE");
     return await prisma.order.update({
       where: {
         id: id,
@@ -46,6 +45,7 @@ export default {
         state: state.state,
       },
       include: {
+        user: true,
         OrderItems: {
           include: {
             Service: true,
@@ -116,7 +116,11 @@ export default {
       include: {
         OrderItems: {
           include: {
-            Service: true,
+            Service: {
+              include: {
+                vendor: true,
+              },
+            },
           },
         },
       },

@@ -4,7 +4,7 @@ import { Pool, Client } from "node-postgres";
 const pool = new Pool({
   user: "my_user",
   host: "localhost",
-  database: "routing_db",
+  database: "route_db_tmp",
   password: "my_user",
   port: 6432,
 });
@@ -36,24 +36,25 @@ function heuristic_haversine(
 export default {
   aStarDb: async function (start: LatLan, end: LatLan) {
     const client = await pool.connect();
+    
     const queryStr = `
-    SELECT ST_AsGeoJSON(ST_Union((the_geom))) FROM ways WHERE gid in
-    (SELECT edge FROM pgr_astar(
-    'SELECT gid as id,
-    source,
-    target,
-    length AS cost,
-    x1, y1, x2, y2
-    FROM ways',
-    (SELECT id FROM ways_vertices_pgr
-    ORDER BY the_geom <-> ST_SetSRID(ST_Point(${start.longitude}, ${start.latitude}), 4326) LIMIT 1), 
-    (SELECT id FROM ways_vertices_pgr
-    ORDER BY the_geom <-> ST_SetSRID(ST_Point(${end.longitude}, ${end.latitude}), 4326) LIMIT 1),
-    directed := false) foo);
-    `;
+    	SELECT ST_AsGeoJSON(ST_Union((the_geom))) FROM ways WHERE gid in
+      (SELECT edge FROM pgr_astar(
+      'SELECT gid as id,
+      source,
+      target,
+      length AS cost,
+      x1, y1, x2, y2
+      FROM ways',
+      (SELECT id FROM ways_vertices_pgr
+      ORDER BY the_geom <-> ST_SetSRID(ST_Point(${start.longitude}, ${start.latitude}), 4326) LIMIT 1), 
+      ORDER BY the_geom <-> ST_SetSRID(ST_Point(${end.longitude}, ${end.latitude}), 4326) LIMIT 1),
+      directed := false) foo);
+    `  
+    ;
+    console.log(queryStr);
 
     const res = await client.query(queryStr);
-
     const result = res.rows[0].st_asgeojson;
     client.release();
     return JSON.parse(result);

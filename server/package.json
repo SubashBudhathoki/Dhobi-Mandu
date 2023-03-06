@@ -29,6 +29,7 @@
   "dependencies": {
     "@prisma/client": "4.10.1",
     "@types/jsonwebtoken": "^9.0.1",
+    "@types/nodemailer": "^6.4.7",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -38,6 +39,7 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "node-postgres": "^0.6.2",
+    "nodemailer": "^6.9.1",
     "zod": "^3.20.6"
   }
 }
