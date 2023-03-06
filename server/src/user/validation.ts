@@ -80,6 +80,24 @@ const UserSchema = z.object({
     .max(180, {
       message: "Address longitude must be between -180 and 180",
     }),
+  phone: z
+    .string({
+      errorMap: (err) => {
+        return {
+          ...err,
+          message: "Phone must be vald number",
+        };
+      },
+    })
+    .superRefine((value, ctx) => {
+      if (isNaN(Number(value))) {
+        return ctx.addIssue({
+          message: "Phone must be vald number",
+          code: "custom",
+          path: ["phone"],
+        });
+      }
+    }),
 });
 
 const UserUpdateSchema = z.object({
@@ -148,6 +166,24 @@ const UserUpdateSchema = z.object({
     })
     .max(180, {
       message: "Address longitude must be between -180 and 180",
+    }),
+  phone: z
+    .string({
+      errorMap: (err) => {
+        return {
+          ...err,
+          message: "Phone must be vald number",
+        };
+      },
+    })
+    .superRefine((value, ctx) => {
+      if (isNaN(Number(value))) {
+        return ctx.addIssue({
+          message: "Phone must be vald number",
+          code: "custom",
+          path: ["phone"],
+        });
+      }
     }),
 });
 

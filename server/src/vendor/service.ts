@@ -60,7 +60,7 @@ export default {
   },
   update: async function (id: number, data: Vendor) {
     ValidateUpdate(data);
-
+    console.log(data);
     return await prisma.vendor.update({
       where: {
         id: id,
