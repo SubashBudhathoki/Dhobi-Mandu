@@ -4,7 +4,7 @@ import { Pool, Client } from "node-postgres";
 const pool = new Pool({
   user: "my_user",
   host: "localhost",
-  database: "route_db_tmp",
+  database: "routing_db",
   password: "my_user",
   port: 6432,
 });
