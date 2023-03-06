@@ -37,19 +37,19 @@ export default {
   aStarDb: async function (start: LatLan, end: LatLan) {
     const client = await pool.connect();
     const queryStr = `
-      SELECT ST_AsGeoJSON(ST_Union((the_geom))) FROM ways WHERE id in
-      (SELECT edge FROM pgr_astar(
-      'SELECT id,
-      source,
-      target,
-      length AS cost,
-      x1, y1, x2, y2
-      FROM ways',
-      (SELECT id FROM ways_vertices_pgr
-      ORDER BY the_geom <-> ST_SetSRID(ST_Point(${start.longitude}, ${start.latitude}), 4326) LIMIT 1), 
-      (SELECT id FROM ways_vertices_pgr
-      ORDER BY the_geom <-> ST_SetSRID(ST_Point(${end.longitude}, ${end.latitude}), 4326) LIMIT 1),
-      directed := false) foo);
+    SELECT ST_AsGeoJSON(ST_Union((the_geom))) FROM ways WHERE gid in
+    (SELECT edge FROM pgr_astar(
+    'SELECT gid as id,
+    source,
+    target,
+    length AS cost,
+    x1, y1, x2, y2
+    FROM ways',
+    (SELECT id FROM ways_vertices_pgr
+    ORDER BY the_geom <-> ST_SetSRID(ST_Point(${start.longitude}, ${start.latitude}), 4326) LIMIT 1), 
+    (SELECT id FROM ways_vertices_pgr
+    ORDER BY the_geom <-> ST_SetSRID(ST_Point(${end.longitude}, ${end.latitude}), 4326) LIMIT 1),
+    directed := false) foo);
     `;
 
     const res = await client.query(queryStr);

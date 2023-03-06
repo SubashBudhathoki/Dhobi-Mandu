@@ -62,7 +62,9 @@ export default function NavBar() {
           <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 pl-3 pl-lg-5">
             <ALink href="/" className="navbar-brand">
               <h1 className="m-0 text-secondary">
-                <span className="text-primary">DRY</span>ME
+                {/* <span className="text-primary">Dhobi-Mandu</span> */}
+                <img src={"./img/logos.png"} alt="" style={{width:"100%",height:"12vh"}}/>
+                
               </h1>
             </ALink>
             <button

@@ -6,7 +6,7 @@ export default function HeroArea() {
       <div id="header-carousel" className="carousel slide" data-ride="carousel">
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <img className="w-100" src="/img/carousel-1.jpg" alt="Image" />
+            <img className="w-100" src="/img/hero.webp" alt="Image" />
             <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
               <div className="p-3" style={{ maxWidth: "900px" }}>
                 <h4 className="text-white text-uppercase mb-md-3">

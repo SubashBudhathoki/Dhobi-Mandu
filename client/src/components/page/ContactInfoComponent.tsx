@@ -13,7 +13,7 @@ export default function ContactInfoComponent() {
               <i className="fa fa-2x fa-map-marker-alt text-white m-0 mr-3"></i>
               <div className="d-flex flex-column">
                 <h5 className="text-white font-weight-medium">Our Location</h5>
-                <p className="m-0 text-white">123 Street, New York, USA</p>
+                <p className="m-0 text-white">Nayabazar-16, Kathmandu, Nepal</p>
               </div>
             </div>
           </div>
@@ -25,7 +25,7 @@ export default function ContactInfoComponent() {
               <i className="fa fa-2x fa-envelope text-white m-0 mr-3"></i>
               <div className="d-flex flex-column">
                 <h5 className="text-white font-weight-medium">Email Us</h5>
-                <p className="m-0 text-white">info@example.com</p>
+                <p className="m-0 text-white">Dhobimandu@gmail.com</p>
               </div>
             </div>
           </div>
@@ -37,7 +37,7 @@ export default function ContactInfoComponent() {
               <i className="fa fa-2x fa-phone-alt text-white m-0 mr-3"></i>
               <div className="d-flex flex-column">
                 <h5 className="text-white font-weight-medium">Call Us</h5>
-                <p className="m-0 text-white">+012 345 6789</p>
+                <p className="m-0 text-white">+9779812345678</p>
               </div>
             </div>
           </div>

@@ -9,33 +9,30 @@ export default function FeaturesComponent() {
             </h6>
             <h1 className="mb-4">Why Choose Us</h1>
             <p>
-              Invidunt lorem justo sanctus clita. Erat lorem labore ea, justo
-              dolor lorem ipsum ut sed eos, ipsum et dolor kasd sit ea justo.
-              Erat justo sed sed diam. Ea et erat ut sed diam sea ipsum est
-              dolor
+            We are providing continues laundry services for the last two years. We are also able to provide affordable pricing and quick delivery with our expert cleaner. We are also ensuring the quality guaranteed services without any compromises.
             </p>
             <div className="row">
               <div className="col-sm-6 mb-4">
                 <h1 className="text-secondary" data-toggle="counter-up">
-                  10
+                  1
                 </h1>
                 <h5 className="font-weight-bold">Years Expereince</h5>
               </div>
               <div className="col-sm-6 mb-4">
                 <h1 className="text-secondary" data-toggle="counter-up">
-                  250
+                  10
                 </h1>
                 <h5 className="font-weight-bold">Expert Worker</h5>
               </div>
               <div className="col-sm-6 mb-4">
                 <h1 className="text-secondary" data-toggle="counter-up">
-                  1250
+                  100
                 </h1>
                 <h5 className="font-weight-bold">Happy Clients</h5>
               </div>
               <div className="col-sm-6 mb-4">
                 <h1 className="text-secondary" data-toggle="counter-up">
-                  9550
+                  500
                 </h1>
                 <h5 className="font-weight-bold">Dry Cleaning</h5>
               </div>
@@ -44,7 +41,7 @@ export default function FeaturesComponent() {
           <div className="col-lg-5">
             <div className="d-flex flex-column align-items-center justify-content-center bg-secondary h-100 py-5 px-3">
               <i className="fa fa-5x fa-certificate text-white mb-5"></i>
-              <h1 className="display-1 text-white mb-3">10+</h1>
+              <h1 className="display-1 text-white mb-3">1+</h1>
               <h1 className="text-white m-0">Years Experience</h1>
             </div>
           </div>

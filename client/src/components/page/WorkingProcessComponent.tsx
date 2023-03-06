@@ -17,7 +17,10 @@ export default function WorkingProcessComponent() {
                   borderWidth: "15px !important",
                 }}
               >
-                <h2 className="display-2 text-secondary m-0">1</h2>
+                <h2 className="display-2 text-secondary m-0">
+                <img src="./img/Order.png" alt="" style={{width:"100%",height:"20.5vh"}}/>
+                  
+                </h2>
               </div>
               <h3 className="font-weight-bold m-0 mt-2">Order Place</h3>
             </div>
@@ -32,7 +35,10 @@ export default function WorkingProcessComponent() {
                   borderWidth: "15px !important",
                 }}
               >
-                <h2 className="display-2 text-secondary m-0">2</h2>
+                <h2 className="display-2 text-secondary m-0">
+                <img src="./img/Pick.png" alt="" style={{width:"100%",height:"20.5vh"}}/>
+
+                </h2>
               </div>
               <h3 className="font-weight-bold m-0 mt-2">Free Pick Up</h3>
             </div>
@@ -47,7 +53,9 @@ export default function WorkingProcessComponent() {
                   borderWidth: "15px !important",
                 }}
               >
-                <h2 className="display-2 text-secondary m-0">3</h2>
+                <h2 className="display-2 text-secondary m-0">
+                  <img src="./img/dry.png" alt="" style={{width:"100%",height:"20.5vh"}}/>
+                </h2>
               </div>
               <h3 className="font-weight-bold m-0 mt-2">Dry Cleaning</h3>
             </div>
@@ -62,7 +70,10 @@ export default function WorkingProcessComponent() {
                   borderWidth: "15px !important",
                 }}
               >
-                <h2 className="display-2 text-secondary m-0">4</h2>
+                <h2 className="display-2 text-secondary m-0">
+                <img src="./img/free.png" alt="" style={{width:"100%",height:"20.5vh"}}/>
+
+                </h2>
               </div>
               <h3 className="font-weight-bold m-0 mt-2">Free Delivery</h3>
             </div>
