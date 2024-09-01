@@ -66,6 +66,16 @@ export async function UserRegister(
   console.log(response.data);
   return response.data;
 }
+export async function UserGetAll(
+  
+): Promise<TReturnData<TUser[]>> {
+  
+  const response = await axiosInstance.get(`${BASE_URL}/user/all`,  {
+    withCredentials: true,
+  });
+  console.log(response.data);
+  return response.data;
+}
 
 export async function UserLogout(): Promise<TReturnData<{}>> {
   const response = await axiosInstance.delete(`${BASE_URL}/user/logout`, {

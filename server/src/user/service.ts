@@ -38,7 +38,13 @@ export default {
     return RemoveKeyFromObj(user, "password");
   },
   getAll: async function () {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+      orderBy: [
+        {
+          id: "desc",
+        },
+      ],
+    });
   },
   create: async function (data: User) {
     // throws zod error if validation fails

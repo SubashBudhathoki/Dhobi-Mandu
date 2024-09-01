@@ -41,6 +41,7 @@ import { ShoppingCartOff } from "tabler-icons-react";
 import { useEffect, useState } from "react";
 import AllServices from "../../components/page/vendor/AllServices";
 import AccountInfoTab from "./AccountInfoTab";
+import AllUsers from "./AllUsers";
 function dashboard() {
   const { authState } = useAuth();
   return (
@@ -54,6 +55,8 @@ function dashboard() {
             <Tabs.Tab value="orders">Orders</Tabs.Tab>
             <Tabs.Tab value="services">Services</Tabs.Tab>
             <Tabs.Tab value="acc_info">Account Information</Tabs.Tab>
+            <Tabs.Tab value="users">All Users</Tabs.Tab>
+
           </Tabs.List>
           <div className="ml-4 w-100">
             <Tabs.Panel value="orders">
@@ -64,6 +67,9 @@ function dashboard() {
             </Tabs.Panel>
             <Tabs.Panel value="acc_info">
               <AccountInfoTab entityType="vendor" />
+            </Tabs.Panel>
+            <Tabs.Panel value="users">
+              <AllUsers />
             </Tabs.Panel>
           </div>
         </Tabs>
@@ -298,4 +304,5 @@ const BadgeButton = ({
     {children}
   </Button>
 );
+
 export default WithAuth(dashboard, "VENDOR");

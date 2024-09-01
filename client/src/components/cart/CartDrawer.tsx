@@ -30,7 +30,7 @@ export default function CartDrawer({
           <p>Cart Total: Nrs. {cart.total}</p>
           <Flex gap="lg">
             <ALink href="/checkout">
-              <Button fullWidth>Proceed to Checkout</Button>
+              <Button onClick={()=>setDrawerOpen(false)} fullWidth>Proceed to Checkout</Button>
             </ALink>
             <Button onClick={() => clearCart()} fullWidth>
               Clear Cart

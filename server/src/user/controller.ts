@@ -124,4 +124,19 @@ export default {
       return res.status(handleError.status).json(handleError);
     }
   },
+  all: async function (req: Request, res: Response) {
+    try {
+      const users = await UserService.getAll();
+      
+
+      return res.status(201).json({
+        success: true,
+        data: users,
+        message: "All Users",
+      });
+    } catch (error) {
+      const handleError = ErrorHandle.handleError(error);
+      return res.status(handleError.status).json(handleError);
+    }
+  },
 };
